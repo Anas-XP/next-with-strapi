@@ -8,5 +8,5 @@ const recipeApi = apiTokenGetRecipe();
 // authenticated client
 const authRecipeAPI = authGetRecipe();
 
-export const getRecipeAction = recipeApi.recipeGetRecipes;
-export const authGetRecipeAction = authRecipeAPI.recipeGetRecipes;
+export const getRecipesAction = recipeApi.recipeGetRecipes;
+export const authGetRecipesAction = authRecipeAPI.recipeGetRecipes;
