@@ -1,13 +1,17 @@
-type availableEnvKeys = ["STRAPI_API_URL" | "STRAPI_API_TOKEN"];
+type availableEnvKeys =
+  | "STRAPI_API_URL"
+  | "STRAPI_API_TOKEN"
+  | "LOGIN_REDIRECT_URL"
+  | "LOGOUT_REDIRECT_URL";
 
 export function getEnv(
-  key: availableEnvKeys[number],
-  options: { defaultValue: string } | { required: true }
+  key: availableEnvKeys,
+  options: { defaultValue: string } | { required: true },
 ): string;
 
 export function getEnv(
-  key: availableEnvKeys[number],
-  options?: { required: false }
+  key: availableEnvKeys,
+  options?: { required: false },
 ): string | undefined;
 
 /**
@@ -32,14 +36,14 @@ export function getEnv(
  * - A required environment variable is missing.
  */
 export function getEnv(
-  key: availableEnvKeys[number],
-  options?: { defaultValue: string } | { required: boolean }
+  key: availableEnvKeys,
+  options?: { defaultValue: string } | { required: boolean },
 ): string | undefined {
   if (!process.env.NEXT_PUBLIC_ENABLE_GET_ENV) return "";
 
   if (!key.startsWith("NEXT_PUBLIC_") && typeof window !== "undefined") {
     throw new Error(
-      "Accessing private environment variables on the client side is not allowed."
+      "Accessing private environment variables on the client side is not allowed.",
     );
   }
 
