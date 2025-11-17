@@ -91,6 +91,8 @@ export interface ApiIngredientIngredientDocument {
   id: number;
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   createdAt?: string;
   /** A datetime field */
@@ -114,6 +116,8 @@ export interface ApiRecipeRecipeDocument {
   id: number;
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -673,6 +677,7 @@ export type IngredientGetIngredientsParams = {
    */
   sort?:
     | "name"
+    | "slug"
     | "createdAt"
     | "updatedAt"
     | "publishedAt"
@@ -697,6 +702,7 @@ export type IngredientGetIngredientsFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientGetIngredientsFieldsItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -751,6 +757,7 @@ export type IngredientGetIngredientsSortAnyOfItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientGetIngredientsSortAnyOfItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -783,6 +790,8 @@ export type IngredientGetIngredients200DataItem = {
   id: number;
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   createdAt?: string;
   /** A datetime field */
@@ -823,6 +832,7 @@ export type IngredientPostIngredientsFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientPostIngredientsFieldsItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -841,6 +851,8 @@ export const IngredientPostIngredientsPopulateAnyOfItem = {
 export type IngredientPostIngredientsBodyData = {
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   publishedAt: string;
   /** A string field */
@@ -865,6 +877,8 @@ export type IngredientPostIngredients200Data = {
   id: number;
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   createdAt?: string;
   /** A datetime field */
@@ -902,6 +916,7 @@ export type IngredientGetIngredientsByIdParams = {
    */
   sort?:
     | "name"
+    | "slug"
     | "createdAt"
     | "updatedAt"
     | "publishedAt"
@@ -921,6 +936,7 @@ export type IngredientGetIngredientsByIdFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientGetIngredientsByIdFieldsItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -942,6 +958,7 @@ export type IngredientGetIngredientsByIdSortAnyOfItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientGetIngredientsByIdSortAnyOfItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -965,6 +982,8 @@ export type IngredientGetIngredientsById200Data = {
   id: number;
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   createdAt?: string;
   /** A datetime field */
@@ -1005,6 +1024,7 @@ export type IngredientPutIngredientsByIdFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientPutIngredientsByIdFieldsItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -1023,6 +1043,8 @@ export const IngredientPutIngredientsByIdPopulateAnyOfItem = {
 export type IngredientPutIngredientsByIdBodyData = {
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   publishedAt?: string;
   /** A string field */
@@ -1047,6 +1069,8 @@ export type IngredientPutIngredientsById200Data = {
   id: number;
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   createdAt?: string;
   /** A datetime field */
@@ -1091,6 +1115,7 @@ export type IngredientDeleteIngredientsByIdFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IngredientDeleteIngredientsByIdFieldsItem = {
   name: "name",
+  slug: "slug",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
   publishedAt: "publishedAt",
@@ -1115,6 +1140,8 @@ export type IngredientDeleteIngredientsById200Data = {
   id: number;
   /** A string field */
   name?: string;
+  /** A UID field */
+  slug?: string;
   /** A datetime field */
   createdAt?: string;
   /** A datetime field */
@@ -1153,6 +1180,7 @@ export type RecipeGetRecipesParams = {
    */
   sort?:
     | "title"
+    | "slug"
     | "description"
     | "instructions"
     | "preparation_time"
@@ -1184,6 +1212,7 @@ export type RecipeGetRecipesFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipeGetRecipesFieldsItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1243,6 +1272,7 @@ export type RecipeGetRecipesSortAnyOfItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipeGetRecipesSortAnyOfItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1280,6 +1310,8 @@ export type RecipeGetRecipes200DataItem = {
   id: number;
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -1344,6 +1376,7 @@ export type RecipePostRecipesFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipePostRecipesFieldsItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1385,6 +1418,8 @@ export const RecipePostRecipesBodyDataIsFeatured = {
 export type RecipePostRecipesBodyData = {
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -1428,6 +1463,8 @@ export type RecipePostRecipes200Data = {
   id: number;
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -1489,6 +1526,7 @@ export type RecipeGetRecipesByIdParams = {
    */
   sort?:
     | "title"
+    | "slug"
     | "description"
     | "instructions"
     | "preparation_time"
@@ -1513,6 +1551,7 @@ export type RecipeGetRecipesByIdFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipeGetRecipesByIdFieldsItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1541,6 +1580,7 @@ export type RecipeGetRecipesByIdSortAnyOfItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipeGetRecipesByIdSortAnyOfItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1569,6 +1609,8 @@ export type RecipeGetRecipesById200Data = {
   id: number;
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -1633,6 +1675,7 @@ export type RecipePutRecipesByIdFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipePutRecipesByIdFieldsItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1674,6 +1717,8 @@ export const RecipePutRecipesByIdBodyDataIsFeatured = {
 export type RecipePutRecipesByIdBodyData = {
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -1717,6 +1762,8 @@ export type RecipePutRecipesById200Data = {
   id: number;
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */
@@ -1785,6 +1832,7 @@ export type RecipeDeleteRecipesByIdFieldsItem =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecipeDeleteRecipesByIdFieldsItem = {
   title: "title",
+  slug: "slug",
   description: "description",
   instructions: "instructions",
   preparation_time: "preparation_time",
@@ -1816,6 +1864,8 @@ export type RecipeDeleteRecipesById200Data = {
   id: number;
   /** A string field */
   title?: string;
+  /** A UID field */
+  slug?: string;
   /** A string field */
   description?: string;
   /** A blocks field */

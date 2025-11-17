@@ -312,7 +312,7 @@
                           },
                           "publishedAt": {
                             "description": "A datetime field",
-                            "default": "2025-11-05T14:12:59.211Z",
+                            "default": "2025-11-06T15:02:43.446Z",
                             "type": "string"
                           },
                           "locale": {
@@ -483,7 +483,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.237Z",
+                          "default": "2025-11-06T15:02:43.459Z",
                           "type": "string"
                         },
                         "locale": {
@@ -558,7 +558,7 @@
                       },
                       "publishedAt": {
                         "description": "A datetime field",
-                        "default": "2025-11-05T14:12:59.236Z",
+                        "default": "2025-11-06T15:02:43.459Z",
                         "type": "string"
                       },
                       "locale": {
@@ -820,7 +820,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.232Z",
+                          "default": "2025-11-06T15:02:43.457Z",
                           "type": "string"
                         },
                         "locale": {
@@ -1002,7 +1002,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.241Z",
+                          "default": "2025-11-06T15:02:43.461Z",
                           "type": "string"
                         },
                         "locale": {
@@ -1077,7 +1077,7 @@
                       },
                       "publishedAt": {
                         "description": "A datetime field",
-                        "default": "2025-11-05T14:12:59.240Z",
+                        "default": "2025-11-06T15:02:43.460Z",
                         "type": "string"
                       },
                       "locale": {
@@ -1252,7 +1252,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.247Z",
+                          "default": "2025-11-06T15:02:43.465Z",
                           "type": "string"
                         },
                         "locale": {
@@ -1326,6 +1326,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -1347,6 +1348,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -1451,6 +1453,7 @@
                   "type": "string",
                   "enum": [
                     "name",
+                    "slug",
                     "createdAt",
                     "updatedAt",
                     "publishedAt",
@@ -1463,6 +1466,7 @@
                     "type": "string",
                     "enum": [
                       "name",
+                      "slug",
                       "createdAt",
                       "updatedAt",
                       "publishedAt",
@@ -1476,6 +1480,7 @@
                     "type": "string",
                     "enum": [
                       "name",
+                      "slug",
                       "createdAt",
                       "updatedAt",
                       "publishedAt",
@@ -1498,6 +1503,7 @@
                       "type": "string",
                       "enum": [
                         "name",
+                        "slug",
                         "createdAt",
                         "updatedAt",
                         "publishedAt",
@@ -1593,6 +1599,10 @@
                             "description": "A string field",
                             "type": "string"
                           },
+                          "slug": {
+                            "description": "A UID field",
+                            "type": "string"
+                          },
                           "createdAt": {
                             "description": "A datetime field",
                             "type": "string"
@@ -1603,7 +1613,7 @@
                           },
                           "publishedAt": {
                             "description": "A datetime field",
-                            "default": "2025-11-05T14:12:59.259Z",
+                            "default": "2025-11-06T15:02:43.469Z",
                             "type": "string"
                           },
                           "locale": {
@@ -1676,6 +1686,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -1759,6 +1770,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "createdAt": {
                           "description": "A datetime field",
                           "type": "string"
@@ -1769,7 +1784,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.267Z",
+                          "default": "2025-11-06T15:02:43.472Z",
                           "type": "string"
                         },
                         "locale": {
@@ -1838,9 +1853,13 @@
                         "description": "A string field",
                         "type": "string"
                       },
+                      "slug": {
+                        "description": "A UID field",
+                        "type": "string"
+                      },
                       "publishedAt": {
                         "description": "A datetime field",
-                        "default": "2025-11-05T14:12:59.266Z",
+                        "default": "2025-11-06T15:02:43.472Z",
                         "type": "string"
                       },
                       "locale": {
@@ -1899,6 +1918,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -1957,6 +1977,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -1979,6 +2000,7 @@
                   "type": "string",
                   "enum": [
                     "name",
+                    "slug",
                     "createdAt",
                     "updatedAt",
                     "publishedAt",
@@ -1991,6 +2013,7 @@
                     "type": "string",
                     "enum": [
                       "name",
+                      "slug",
                       "createdAt",
                       "updatedAt",
                       "publishedAt",
@@ -2004,6 +2027,7 @@
                     "type": "string",
                     "enum": [
                       "name",
+                      "slug",
                       "createdAt",
                       "updatedAt",
                       "publishedAt",
@@ -2026,6 +2050,7 @@
                       "type": "string",
                       "enum": [
                         "name",
+                        "slug",
                         "createdAt",
                         "updatedAt",
                         "publishedAt",
@@ -2082,6 +2107,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "createdAt": {
                           "description": "A datetime field",
                           "type": "string"
@@ -2092,7 +2121,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.263Z",
+                          "default": "2025-11-06T15:02:43.471Z",
                           "type": "string"
                         },
                         "locale": {
@@ -2176,6 +2205,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -2259,6 +2289,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "createdAt": {
                           "description": "A datetime field",
                           "type": "string"
@@ -2269,7 +2303,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.270Z",
+                          "default": "2025-11-06T15:02:43.474Z",
                           "type": "string"
                         },
                         "locale": {
@@ -2338,9 +2372,13 @@
                         "description": "A string field",
                         "type": "string"
                       },
+                      "slug": {
+                        "description": "A UID field",
+                        "type": "string"
+                      },
                       "publishedAt": {
                         "description": "A datetime field",
-                        "default": "2025-11-05T14:12:59.269Z",
+                        "default": "2025-11-06T15:02:43.473Z",
                         "type": "string"
                       },
                       "locale": {
@@ -2394,6 +2432,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -2452,6 +2491,7 @@
                 "type": "string",
                 "enum": [
                   "name",
+                  "slug",
                   "createdAt",
                   "updatedAt",
                   "publishedAt",
@@ -2499,6 +2539,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "createdAt": {
                           "description": "A datetime field",
                           "type": "string"
@@ -2509,7 +2553,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.273Z",
+                          "default": "2025-11-06T15:02:43.475Z",
                           "type": "string"
                         },
                         "locale": {
@@ -2583,6 +2627,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -2609,6 +2654,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -2718,6 +2764,7 @@
                   "type": "string",
                   "enum": [
                     "title",
+                    "slug",
                     "description",
                     "instructions",
                     "preparation_time",
@@ -2735,6 +2782,7 @@
                     "type": "string",
                     "enum": [
                       "title",
+                      "slug",
                       "description",
                       "instructions",
                       "preparation_time",
@@ -2753,6 +2801,7 @@
                     "type": "string",
                     "enum": [
                       "title",
+                      "slug",
                       "description",
                       "instructions",
                       "preparation_time",
@@ -2780,6 +2829,7 @@
                       "type": "string",
                       "enum": [
                         "title",
+                        "slug",
                         "description",
                         "instructions",
                         "preparation_time",
@@ -2884,6 +2934,10 @@
                             "description": "A string field",
                             "type": "string"
                           },
+                          "slug": {
+                            "description": "A UID field",
+                            "type": "string"
+                          },
                           "description": {
                             "description": "A string field",
                             "type": "string"
@@ -2919,7 +2973,7 @@
                           },
                           "publishedAt": {
                             "description": "A datetime field",
-                            "default": "2025-11-05T14:12:59.283Z",
+                            "default": "2025-11-06T15:02:43.482Z",
                             "type": "string"
                           },
                           "locale": {
@@ -3007,6 +3061,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -3099,6 +3154,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "description": {
                           "description": "A string field",
                           "type": "string"
@@ -3134,7 +3193,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.296Z",
+                          "default": "2025-11-06T15:02:43.489Z",
                           "type": "string"
                         },
                         "locale": {
@@ -3218,6 +3277,10 @@
                         "description": "A string field",
                         "type": "string"
                       },
+                      "slug": {
+                        "description": "A UID field",
+                        "type": "string"
+                      },
                       "description": {
                         "description": "A string field",
                         "type": "string"
@@ -3253,7 +3316,7 @@
                       },
                       "publishedAt": {
                         "description": "A datetime field",
-                        "default": "2025-11-05T14:12:59.294Z",
+                        "default": "2025-11-06T15:02:43.488Z",
                         "type": "string"
                       },
                       "locale": {
@@ -3328,6 +3391,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -3395,6 +3459,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -3422,6 +3487,7 @@
                   "type": "string",
                   "enum": [
                     "title",
+                    "slug",
                     "description",
                     "instructions",
                     "preparation_time",
@@ -3439,6 +3505,7 @@
                     "type": "string",
                     "enum": [
                       "title",
+                      "slug",
                       "description",
                       "instructions",
                       "preparation_time",
@@ -3457,6 +3524,7 @@
                     "type": "string",
                     "enum": [
                       "title",
+                      "slug",
                       "description",
                       "instructions",
                       "preparation_time",
@@ -3484,6 +3552,7 @@
                       "type": "string",
                       "enum": [
                         "title",
+                        "slug",
                         "description",
                         "instructions",
                         "preparation_time",
@@ -3545,6 +3614,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "description": {
                           "description": "A string field",
                           "type": "string"
@@ -3580,7 +3653,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.290Z",
+                          "default": "2025-11-06T15:02:43.485Z",
                           "type": "string"
                         },
                         "locale": {
@@ -3679,6 +3752,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -3771,6 +3845,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "description": {
                           "description": "A string field",
                           "type": "string"
@@ -3806,7 +3884,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.306Z",
+                          "default": "2025-11-06T15:02:43.492Z",
                           "type": "string"
                         },
                         "locale": {
@@ -3890,6 +3968,10 @@
                         "description": "A string field",
                         "type": "string"
                       },
+                      "slug": {
+                        "description": "A UID field",
+                        "type": "string"
+                      },
                       "description": {
                         "description": "A string field",
                         "type": "string"
@@ -3925,7 +4007,7 @@
                       },
                       "publishedAt": {
                         "description": "A datetime field",
-                        "default": "2025-11-05T14:12:59.304Z",
+                        "default": "2025-11-06T15:02:43.491Z",
                         "type": "string"
                       },
                       "locale": {
@@ -3994,6 +4076,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -4061,6 +4144,7 @@
                 "type": "string",
                 "enum": [
                   "title",
+                  "slug",
                   "description",
                   "instructions",
                   "preparation_time",
@@ -4113,6 +4197,10 @@
                           "description": "A string field",
                           "type": "string"
                         },
+                        "slug": {
+                          "description": "A UID field",
+                          "type": "string"
+                        },
                         "description": {
                           "description": "A string field",
                           "type": "string"
@@ -4148,7 +4236,7 @@
                         },
                         "publishedAt": {
                           "description": "A datetime field",
-                          "default": "2025-11-05T14:12:59.310Z",
+                          "default": "2025-11-06T15:02:43.494Z",
                           "type": "string"
                         },
                         "locale": {
@@ -10222,7 +10310,7 @@
           },
           "publishedAt": {
             "description": "A datetime field",
-            "default": "2025-11-05T14:12:59.222Z",
+            "default": "2025-11-06T15:02:43.452Z",
             "type": "string"
           },
           "related": {}
@@ -10273,7 +10361,7 @@
           },
           "publishedAt": {
             "description": "A datetime field",
-            "default": "2025-11-05T14:12:59.224Z",
+            "default": "2025-11-06T15:02:43.453Z",
             "type": "string"
           },
           "locale": {
@@ -10318,6 +10406,10 @@
             "description": "A string field",
             "type": "string"
           },
+          "slug": {
+            "description": "A UID field",
+            "type": "string"
+          },
           "createdAt": {
             "description": "A datetime field",
             "type": "string"
@@ -10328,7 +10420,7 @@
           },
           "publishedAt": {
             "description": "A datetime field",
-            "default": "2025-11-05T14:12:59.225Z",
+            "default": "2025-11-06T15:02:43.454Z",
             "type": "string"
           },
           "locale": {
@@ -10373,6 +10465,10 @@
             "description": "A string field",
             "type": "string"
           },
+          "slug": {
+            "description": "A UID field",
+            "type": "string"
+          },
           "description": {
             "description": "A string field",
             "type": "string"
@@ -10408,7 +10504,7 @@
           },
           "publishedAt": {
             "description": "A datetime field",
-            "default": "2025-11-05T14:12:59.215Z",
+            "default": "2025-11-06T15:02:43.449Z",
             "type": "string"
           },
           "locale": {

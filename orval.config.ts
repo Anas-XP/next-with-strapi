@@ -1,18 +1,6 @@
 import { defineConfig } from "orval";
-import { capitalizeWords } from "./lib/string.utils";
 
 export default defineConfig({
-  // strapiQueryHooks: {
-  //   output: {
-  //     mode: "tags-split", // Optional: generates files per tag (e.g., per collection type)
-  //     target: "strapi-endpoints/hooks", // Output directory for generated code
-  //     client: "react-query", // Instructs Orval to generate React Query hooks
-  //     // Optional: You can add `mock: true` for automatic mocks during development
-  //   },
-  //   input: {
-  //     target: "strapi-endpoints/specification.json", // Your Strapi OpenAPI URL or file path
-  //   },
-  // },
   strapiAPITokenClient: {
     output: {
       mode: "tags-split", // Optional: generates files per tag (e.g., per collection type)

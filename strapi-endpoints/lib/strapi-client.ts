@@ -6,7 +6,6 @@ import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import { cookies } from "next/headers"; // Import the Next.js cookies function
 
 const BASE_URL = getEnv("STRAPI_API_URL", { required: true });
-
 // --- 1. Admin Client (for service-to-service calls) ---
 
 const strapiAPITokenInstance = axios.create({
@@ -17,14 +16,12 @@ const strapiAPITokenInstance = axios.create({
   },
 });
 
-strapiAPITokenInstance.interceptors.response.use((response) => response.data);
-
 /**
  * Mutator for Orval (Admin Role)
  * Uses the static admin API token.
  */
-export const strapiAPITokenClient = <T>(
-  config: AxiosRequestConfig
+export const strapiAPITokenClient = async <T>(
+  config: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> => {
   return strapiAPITokenInstance(config);
 };
@@ -39,16 +36,12 @@ const strapiAuthenticatedInstance = axios.create({
   },
 });
 
-strapiAuthenticatedInstance.interceptors.response.use(
-  (response) => response.data
-);
-
 /**
  * Mutator for Orval (Authenticated User Role)
  * Dynamically gets the JWT from the user's cookie.
  */
 export const strapiAuthenticatedClient = async <T>(
-  config: AxiosRequestConfig
+  config: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> => {
   // Get the JWT from the cookie store
   const token = (await cookies()).get("jwt")?.value; // Or whatever you name your cookie
