@@ -11,7 +11,19 @@ export const RecipesList = async () => {
 
   const locale = await getLocale();
   const response = await getRecipesAction({
+    populate: ['categories'],
     locale,
+    fields: ['title'],
+    filters: {
+      'title' : {
+        $eq: 'Recipe'
+      },
+      
+    },
+    pagination: {
+      page: 1,
+      pageSize: 10,
+    }
   });
 
   const recipes = response.data.data;

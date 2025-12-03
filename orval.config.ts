@@ -1,50 +1,45 @@
 import { defineConfig } from "orval";
 
 export default defineConfig({
-  strapiAPITokenClient: {
+  // You now only need one unified configuration block
+  strapiClient: {
     output: {
-      mode: "tags-split", // Optional: generates files per tag (e.g., per collection type)
-      target: "strapi-endpoints/api-token-client", // Output directory for generated code
-      client: "axios", // Instructs Orval to generate React Query hooks
-      // Optional: You can add `mock: true` for automatic mocks during development
+      mode: "tags-split",
+      // Change this to a single directory for all generated endpoints
+      target: "strapi-endpoints/__generated__/strapi-client",
+      client: "axios",
       override: {
         mutator: {
-          // Point to the server-client file you just created
+          // Point to the file where you put the unified 'strapiClient'
           path: "strapi-endpoints/lib/strapi-client.ts",
-          // The name of the exported axios instance
-          name: "strapiAPITokenClient",
+          // IMPORTANT: This must match the exported function name
+          name: "strapiClient",
         },
       },
     },
     input: {
-      target: "strapi-endpoints/specification.json", // Your Strapi OpenAPI URL or file path
+      target: "strapi-endpoints/specification.json",
     },
-    // Optional: Hook to add a "use server" banner to the generated file
     hooks: {
-      afterAllFilesWrite: "pnpx prettier --write", // Clean up the file
+      afterAllFilesWrite: "pnpx prettier --write",
     },
   },
-  strapiAuthenticatedClient: {
+  // 2. New Zod Schema Generator
+  strapiZod: {
     output: {
-      mode: "tags-split", // Optional: generates files per tag (e.g., per collection type)
-      target: "strapi-endpoints/authenticated-client", // Output directory for generated code
-      client: "axios", // Instructs Orval to generate React Query hooks
-      // Optional: You can add `mock: true` for automatic mocks during development
-      override: {
-        mutator: {
-          // Point to the server-client file you just created
-          path: "strapi-endpoints/lib/strapi-client.ts",
-          // The name of the exported axios instance
-          name: "strapiAuthenticatedClient",
-        },
-      },
+      mode: "tags-split",
+      // Output to a dedicated 'zod' folder to avoid clutter
+      target: "strapi-endpoints/__generated__/strapi-zod",
+      client: "zod",
+      schemas: "strapi-endpoints/__generated__/strapi-zod/__interfaces__",
+      // Helpful to distinguish these files
+      fileExtension: ".zod.ts",
     },
     input: {
-      target: "strapi-endpoints/specification.json", // Your Strapi OpenAPI URL or file path
+      target: "strapi-endpoints/specification.json",
     },
-    // Optional: Hook to add a "use server" banner to the generated file
     hooks: {
-      afterAllFilesWrite: "pnpx prettier --write", // Clean up the file
+      afterAllFilesWrite: "pnpx prettier --write",
     },
   },
 });

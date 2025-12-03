@@ -25,3 +25,16 @@ export function capitalizeWords(string: string): string {
 		return match.toUpperCase();
 	});
 }
+
+/**
+ * Converts CamelCase or PascalCase strings into space-separated Title Case.
+ * Example: "AxiosError" -> "Axios Error"
+ * Example: "validationFailed" -> "Validation Failed"
+ */
+export const formatToTitleCase = (text:string) => {
+  // 1. Insert space before capital letters that follow a lowercase letter
+  const spaced = text.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+  // 2. Capitalize the very first character (handles camelCase inputs)
+  return capitalizeWords(spaced)
+};

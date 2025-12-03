@@ -5,6 +5,7 @@ import { loginAction } from "../actions/login.actions";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "@/i18n/navigation";
+import { formatToTitleCase } from "@/lib/string.utils";
 
 export const useLogin = () => {
   const router = useRouter();
@@ -20,17 +21,11 @@ export const useLogin = () => {
       }
     },
     onError: (error) => {
-      toast.error("Signed In! (Error) ", {
+      toast.error(`${formatToTitleCase(error.name)}`, {
         description: () => (
           <div>
-            <pre>{JSON.stringify(error, null, 4)}</pre>
             <Separator />
-            <ol className="list-decimal">
-              <li>{error.name}</li>
-              <li>{error.message}</li>
-              <li>{error.stack}</li>
-              <li>{JSON.stringify(error.cause, null, 4)}</li>
-            </ol>
+            <p>{error.message}</p>
           </div>
         ),
       });
