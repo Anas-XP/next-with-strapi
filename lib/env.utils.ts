@@ -2,7 +2,8 @@ type availableEnvKeys =
   | "STRAPI_API_URL"
   | "STRAPI_API_TOKEN"
   | "LOGIN_REDIRECT_URL"
-  | "LOGOUT_REDIRECT_URL";
+  | "LOGOUT_REDIRECT_URL"
+  | "NODE_ENV";
 
 export function getEnv(
   key: availableEnvKeys,
