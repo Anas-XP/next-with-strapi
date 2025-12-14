@@ -3,7 +3,9 @@ type availableEnvKeys =
   | "STRAPI_API_TOKEN"
   | "LOGIN_REDIRECT_URL"
   | "LOGOUT_REDIRECT_URL"
-  | "NODE_ENV";
+  | "NODE_ENV"
+  // NEXT_PUBLIC_
+  | "NEXT_PUBLIC_SHOW_REACT_QUERY_DEV_TOOLS";
 
 export function getEnv(
   key: availableEnvKeys,
@@ -44,7 +46,7 @@ export function getEnv(
 
   if (!key.startsWith("NEXT_PUBLIC_") && typeof window !== "undefined") {
     throw new Error(
-      "Accessing private environment variables on the client side is not allowed.",
+      `[KEY: ${key}] Accessing private environment variables on the client side is not allowed.`,
     );
   }
 

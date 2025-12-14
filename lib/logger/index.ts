@@ -6,6 +6,7 @@ const loggerInitiator = () => {
     middleware: createLogger("MIDDLEWARE"),
     database: createLogger("DATABASE"),
     api: createLogger("API"),
+    github: createLogger("GITHUB"),
     general: createLogger("GENERAL"),
   };
 };

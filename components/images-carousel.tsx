@@ -4,7 +4,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import { PluginUploadFileDocument } from "@/strapi-endpoints/api-token-client/learningStrapiV5.schemas";
 import { ImageOffIcon } from "lucide-react";
 import Image from "next/image";
 import { ClassNameValue } from "tailwind-merge";
@@ -15,13 +14,14 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "./ui/empty";
+import { UploadGetFiles200Item } from "@/strapi-endpoints/__generated__/strapi-client/learningStrapiV5.schemas";
 
 export const ImagesCarousel = ({
   images,
   singleImageOptions,
   CarouselContentClassName,
 }: {
-  images: (PluginUploadFileDocument | undefined)[];
+  images: (UploadGetFiles200Item | undefined)[];
   singleImageOptions?: { className: ClassNameValue };
   CarouselContentClassName?: ClassNameValue;
 }) => {
@@ -62,7 +62,7 @@ const ImageEmptyItem = ({
   image,
   isImagesArrayEmpty = false,
 }: {
-  image?: PluginUploadFileDocument;
+  image?: UploadGetFiles200Item;
   isImagesArrayEmpty?: boolean;
 }) => {
   return (
