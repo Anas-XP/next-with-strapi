@@ -1,6 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CardContent, CardFooter } from "@/components/ui/card";
+import {
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -10,9 +17,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "@tanstack/react-form";
-import { TrashIcon } from "lucide-react";
 import { useLogin } from "../hooks/use-login.hook";
 import { zodLoginFormSchema } from "../validations/login-form.zod";
+import {
+  Redo2Icon,
+  RedoDotIcon,
+  RedoIcon,
+  RefreshCwIcon,
+  TrashIcon,
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 export const LoginForm = () => {
   const { mutate: loginMutate, isPending: isLoginPending } = useLogin();
@@ -31,6 +46,24 @@ export const LoginForm = () => {
   });
   return (
     <>
+      <CardHeader>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription>
+          Enter your credentials below to login to your account
+        </CardDescription>
+        <CardAction>
+          <Button
+            disabled={isLoginPending}
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            <RefreshCwIcon />
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <Separator />
+
       <CardContent>
         <form
           id="login-form"
@@ -46,7 +79,9 @@ export const LoginForm = () => {
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      Email (Identifier)
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -94,16 +129,13 @@ export const LoginForm = () => {
 
       <CardFooter>
         <Field orientation="horizontal">
-          <Button
-            disabled={isLoginPending}
-            type="button"
-            variant="outline"
-            onClick={() => form.reset()}
-          >
-            <TrashIcon />
-          </Button>
           <Button disabled={isLoginPending} type="submit" form="login-form">
-            {isLoginPending ? <Spinner /> : "Submit"}
+            <Spinner
+              className={cn("hidden", {
+                block: isLoginPending,
+              })}
+            />
+            {!isLoginPending && "Submit"}
           </Button>
         </Field>
       </CardFooter>

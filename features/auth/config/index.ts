@@ -4,6 +4,7 @@ import { getUsersPermissions } from "@/strapi-endpoints/__generated__/strapi-cli
 export const userPermissionPluginAPI = getUsersPermissions();
 
 export const JWT_COOKIE_NAME = "jwt";
+export const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 export const USER_COOKIE_NAME = "user";
 
 export const COOKIE_CONFIG = {

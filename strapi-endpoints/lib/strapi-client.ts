@@ -1,5 +1,6 @@
 "use server";
 
+import { asyncHandler } from "@/lib/async-handler.utils";
 import { getEnv } from "@/lib/env.utils";
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
@@ -24,21 +25,24 @@ const strapiInstance = axios.create({
  */
 export const strapiClient = async <T>(
   config: AxiosRequestConfig,
-): Promise<AxiosResponse<T>> => {
-  // 1. Check for the user token first
-  const cookieStore = await cookies();
-  const userToken = cookieStore.get("jwt")?.value;
+): Promise<AxiosResponse<T>> =>
+  asyncHandler(
+    async (config: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
+      // 1. Check for the user token first
+      const cookieStore = await cookies();
+      const userToken = cookieStore.get("jwt")?.value;
 
-  // 2. Determine which token to use
-  // If userToken exists, use it. Otherwise, fallback to the Admin Token.
-  const tokenToUse = userToken || STRAPI_API_TOKEN;
+      // 2. Determine which token to use
+      // If userToken exists, use it. Otherwise, fallback to the Admin Token.
+      const tokenToUse = userToken || STRAPI_API_TOKEN;
 
-  if (tokenToUse) {
-    config.headers = {
-      ...config.headers, // Preserve existing headers
-      Authorization: `Bearer ${tokenToUse}`,
-    };
-  }
+      if (tokenToUse) {
+        config.headers = {
+          ...config.headers, // Preserve existing headers
+          Authorization: `Bearer ${tokenToUse}`,
+        };
+      }
 
-  return strapiInstance(config);
-};
+      return strapiInstance(config);
+    },
+  )(config);
