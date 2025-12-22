@@ -15,19 +15,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
+import { RefreshCwIcon } from "lucide-react";
 import { useLogin } from "../hooks/use-login.hook";
 import { zodLoginFormSchema } from "../validations/login-form.zod";
-import {
-  Redo2Icon,
-  RedoDotIcon,
-  RedoIcon,
-  RefreshCwIcon,
-  TrashIcon,
-} from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 
 export const LoginForm = () => {
   const { mutate: loginMutate, isPending: isLoginPending } = useLogin();

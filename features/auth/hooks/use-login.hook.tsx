@@ -1,14 +1,14 @@
 "use client";
 
+import { useRouterEnhanced } from "@/components/enhanced/use-router.enhanced";
 import { showToastFromError } from "@/hooks/show-error-toast";
-import { useRouter } from "@/i18n/navigation";
 import { useMutation } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { loginAction } from "../actions/login.actions";
-import { useSearchParams } from "next/navigation";
 
 export const useLogin = () => {
-  const router = useRouter();
+  const router = useRouterEnhanced();
   const searchParams = useSearchParams();
   return useMutation({
     mutationFn: loginAction, // The server action to call

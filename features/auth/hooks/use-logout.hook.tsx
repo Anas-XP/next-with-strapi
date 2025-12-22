@@ -1,13 +1,13 @@
 "use client";
 
+import { useRouterEnhanced } from "@/components/enhanced/use-router.enhanced";
 import { showToastFromError } from "@/hooks/show-error-toast";
-import { useRouter } from "@/i18n/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { logoutAction } from "../actions/logout.action";
 
 export const useLogout = () => {
-  const router = useRouter();
+  const router = useRouterEnhanced();
   return useMutation({
     mutationFn: logoutAction, // The server action to call
 

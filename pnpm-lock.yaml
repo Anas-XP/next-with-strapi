@@ -150,6 +150,9 @@ importers:
       react-resizable-panels:
         specifier: ^3.0.6
         version: 3.0.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react-spinners:
+        specifier: ^0.17.0
+        version: 0.17.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       recharts:
         specifier: 2.15.4
         version: 2.15.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -165,6 +168,9 @@ importers:
       zod:
         specifier: ^4.1.12
         version: 4.1.12
+      zustand:
+        specifier: ^5.0.9
+        version: 5.0.9(@types/react@19.2.7)(immer@9.0.21)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -3478,6 +3484,12 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  react-spinners@0.17.0:
+    resolution: {integrity: sha512-L/8HTylaBmIWwQzIjMq+0vyaRXuoAevzWoD35wKpNTxxtYXWZp+xtgkfD7Y4WItuX0YvdxMPU79+7VhhmbmuTQ==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   react-style-singleton@2.2.3:
     resolution: {integrity: sha512-b6jSvxvVnyptAiLjbkWLE/lOnR4lfTtDAl+eUC7RZy+QQWc6wRzIV2CE6xBuMmDxc2qIihtDCZD5NPOFl7fRBQ==}
     engines: {node: '>=10'}
@@ -3989,6 +4001,24 @@ packages:
 
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+
+  zustand@5.0.9:
+    resolution: {integrity: sha512-ALBtUj0AfjJt3uNRQoL1tL2tMvj6Gp/6e39dnfT6uzpelGru8v1tPOGBzayOWbPJvujM8JojDk3E1LxeFisBNg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': 19.2.7
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -7507,6 +7537,11 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
       react-transition-group: 4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
 
+  react-spinners@0.17.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
   react-style-singleton@2.2.3(@types/react@19.2.7)(react@19.2.3):
     dependencies:
       get-nonce: 1.0.1
@@ -8150,3 +8185,10 @@ snapshots:
       zod: 4.1.12
 
   zod@4.1.12: {}
+
+  zustand@5.0.9(@types/react@19.2.7)(immer@9.0.21)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
+    optionalDependencies:
+      '@types/react': 19.2.7
+      immer: 9.0.21
+      react: 19.2.3
+      use-sync-external-store: 1.6.0(react@19.2.3)
