@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { formatToTitleCase } from "@/lib/string.utils";
+import { formatToTitleCase, removePrefix } from "@/lib/string.utils";
 import { toast } from "sonner";
 
 export const showToastFromError = (error: Error) => {
@@ -7,7 +7,7 @@ export const showToastFromError = (error: Error) => {
     description: () => (
       <div>
         <Separator />
-        <p>{error.message}</p>
+        <p>{removePrefix(error.message)}</p>
       </div>
     ),
   });

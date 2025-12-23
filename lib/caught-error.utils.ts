@@ -7,20 +7,38 @@ export const ZEErrorName = z.enum([
   "RateLimitError",
   "StrapiError",
   "UnexpectedError",
+  "ApplicationError",
 ]);
 
 export type EErrorName = z.infer<typeof ZEErrorName>;
 
+export interface StrapiValidationError {
+  path: string[];
+  message: string;
+  name: string;
+  value: string;
+}
+
+export interface StrapiErrorDetails {
+  errors?: StrapiValidationError[];
+  [key: string]: unknown;
+}
+
 export interface INormalizedError {
   message: string;
-  details?: unknown | null;
+  details?: StrapiErrorDetails | unknown | null;
   status: number;
   name: EErrorName;
 }
 
 export interface StrapiErrorResponse {
   data: null;
-  error: INormalizedError;
+  error: {
+    status: number;
+    name: EErrorName;
+    message: string;
+    details?: StrapiErrorDetails;
+  };
 }
 
 export class CaughtError extends Error {

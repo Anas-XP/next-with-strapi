@@ -5,7 +5,6 @@ import {
   StrapiErrorResponse,
   ZEErrorName,
 } from "./caught-error.utils";
-import { logger } from "./logger";
 
 export type SafeResult<T> =
   | { success: true; data: T; error?: never }
@@ -46,38 +45,48 @@ export function asyncHandler<TArgs extends unknown[], TOutput>(
         } else if (axios.isAxiosError(error)) {
           const strapiData = error.response?.data as StrapiErrorResponse;
 
+          let message = strapiData?.error?.message || error.message;
+          const details = strapiData?.error?.details;
+
+          if (
+            strapiData?.error?.name === "ValidationError" &&
+            details?.errors &&
+            Array.isArray(details.errors) &&
+            details.errors.length > 0
+          ) {
+            const firstError = details.errors[0];
+            message = firstError.message;
+          }
+
           normalizedError = new CaughtError(
-            strapiData.error.message,
-            error.response?.status,
-            strapiData.error.details,
+            message,
+            error.response?.status || 500,
+            details,
           );
 
+          // التحقق من اسم الخطأ كما كان في الكود السابق
           const errorNameValidationResult = ZEErrorName.safeParse(error.name);
           const strapiErrorNameValidationResult = ZEErrorName.safeParse(
-            strapiData.error.name,
+            strapiData?.error?.name,
           );
 
           if (
             errorNameValidationResult.success &&
             strapiErrorNameValidationResult.success
           ) {
-            normalizedError.name = strapiErrorNameValidationResult.data;
+            normalizedError.name = `${strapiErrorNameValidationResult.data}`;
+            // في حالة الـ Validation، لا نريد تكرار الاسم في الرسالة لأننا حسنّا الرسالة بالفعل
+            if (strapiData?.error?.name !== "ValidationError") {
+              normalizedError.message =
+                `${errorNameValidationResult.data} : ` +
+                normalizedError.message;
+            }
           } else if (strapiErrorNameValidationResult.success) {
-            logger.asyncHandLer.info(
-              `Unknown Error Name (${error.name}). Please, add it to the error name schema.`,
-            );
-
             normalizedError.name = strapiErrorNameValidationResult.data;
           } else if (errorNameValidationResult.success) {
-            logger.asyncHandLer.info(
-              `Unknown Error Name (${strapiData.error.name}). Please, add it to the error name schema.`,
-            );
-
             normalizedError.name = errorNameValidationResult.data;
           } else {
-            logger.asyncHandLer.info(
-              `Unknown Error Names (${strapiData.error.name}) (${error.name}). Please, add them to the error name schema.`,
-            );
+            // Fallback
             normalizedError.name = "UnexpectedError";
           }
         } else if (error instanceof Error) {
@@ -86,9 +95,6 @@ export function asyncHandler<TArgs extends unknown[], TOutput>(
           const errorNameValidationResult = ZEErrorName.safeParse(error.name);
 
           if (!errorNameValidationResult.success) {
-            logger.asyncHandLer.info(
-              `Unknown Error Name (${error.name}). Please, add it to the error name schema.`,
-            );
             normalizedError.name = "UnexpectedError";
           } else {
             normalizedError.name = errorNameValidationResult.data;
@@ -100,6 +106,9 @@ export function asyncHandler<TArgs extends unknown[], TOutput>(
             success: false,
             error: {
               message: normalizedError.message,
+              details: normalizedError.details,
+              status: normalizedError.status,
+              name: normalizedError.name,
             },
           };
         }

@@ -1,8 +1,10 @@
 import { LinkEnhanced } from "@/components/enhanced/link.enhanced";
 import { buttonVariants } from "@/components/ui/button";
-import { LoginFormCard } from "@/features/auth/components/login-form-card";
+import { LoginForm } from "@/features/auth/components/login/form/login-form";
+import { LoginForm_Skeleton } from "@/features/auth/components/login/form/login-form.skeleton";
 import { getSafeLocale } from "@/lib/i18n.utils";
 import { HomeIcon } from "lucide-react";
+import { Suspense } from "react";
 
 const LoginPage = async ({
   params,
@@ -17,7 +19,9 @@ const LoginPage = async ({
           <HomeIcon /> Home
         </LinkEnhanced>
 
-        <LoginFormCard />
+        <Suspense fallback={<LoginForm_Skeleton />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   );
