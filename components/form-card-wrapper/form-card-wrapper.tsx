@@ -13,7 +13,7 @@ import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type TFormCardWrapperProps = {
-  title: string;
+  title: ReactNode;
   description: string;
   formReset: () => void;
   children: ReactNode;

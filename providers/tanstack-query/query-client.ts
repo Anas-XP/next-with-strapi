@@ -1,4 +1,5 @@
-import { QueryClient } from "@tanstack/react-query";
+import { showToastFromError } from "@/hooks/show-error-toast";
+import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,4 +15,13 @@ export const queryClient = new QueryClient({
       },
     },
   },
+  mutationCache: new MutationCache({
+    onSuccess(data) {},
+    onError: (error, _variables, _context, mutation) => {
+      if (mutation.options.meta?.disableGlobalErrorHandling) return;
+
+      showToastFromError(error);
+    },
+  }),
+  queryCache: new QueryCache({}),
 });

@@ -1,35 +1,18 @@
 "use client";
 
-import { useRouterEnhanced } from "@/components/enhanced/use-router.enhanced";
-import { showToastFromError } from "@/hooks/show-error-toast";
-import { useMutation } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useMutationEnhanced } from "@/components/enhanced/use-mutation.enhanced";
 import { toast } from "sonner";
 import { loginAction } from "../actions/login.actions";
+import { AnyFormApi } from "@tanstack/react-form";
 
-export const useLogin = () => {
-  const router = useRouterEnhanced();
-  const searchParams = useSearchParams();
-  return useMutation({
-    mutationFn: loginAction, // The server action to call
-
-    // This is the most important part!
-    onSuccess: (data) => {
-      toast.success("Welcome Back!");
-
-      const callbackUrl = searchParams.get("callbackUrl");
-
-      if (callbackUrl) {
-        router.push(callbackUrl);
-        return;
+export const useLogin = ({ form }: { form: AnyFormApi }) => {
+  return useMutationEnhanced({
+    mutationFn: loginAction,
+    form,
+    onSuccess: ({ success, data }) => {
+      if (success) {
+        toast.success(`Welcome Back! ${data.username}`);
       }
-
-      if (data.redirectURL) {
-        router.push(data.redirectURL);
-      }
-    },
-    onError: (error) => {
-      showToastFromError(error);
     },
   });
 };

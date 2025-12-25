@@ -1,6 +1,6 @@
 "use server";
 
-import { asyncHandler } from "@/lib/async-handler.utils";
+import { asyncHandler } from "@/lib/error-handling/async-handler.utils";
 import { getEnv } from "@/lib/env.utils";
 import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
@@ -45,4 +45,5 @@ export const strapiClient = async <T>(
 
       return strapiInstance(config);
     },
+    false,
   )(config);

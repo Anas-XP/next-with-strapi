@@ -1,7 +1,6 @@
-import { LinkEnhanced } from "@/components/enhanced/link.enhanced";
-import { buttonVariants } from "@/components/ui/button";
+import { LogInLinkButton } from "@/components/login-link-button";
+import { RegisterLinkButton } from "@/components/register-link-button";
 import { getSafeLocale } from "@/lib/i18n.utils";
-import { LogInIcon, UserPlus } from "lucide-react";
 import Image from "next/image";
 
 export default async function Home({
@@ -30,14 +29,8 @@ export default async function Home({
           </p>
         </div>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <LinkEnhanced href={"/login"} className={buttonVariants()}>
-            <LogInIcon />
-            Login
-          </LinkEnhanced>{" "}
-          <LinkEnhanced href={"/register"} className={buttonVariants()}>
-            <UserPlus />
-            Register
-          </LinkEnhanced>
+          <LogInLinkButton />
+          <RegisterLinkButton />
         </div>
       </main>
     </div>

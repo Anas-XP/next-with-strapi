@@ -47,11 +47,11 @@ export const usersPermissionsPostAuthLocalRegisterBodyEmailRegExp = new RegExp(
 );
 
 export const usersPermissionsPostAuthLocalRegisterBody = zod.object({
-  username: zod.string().min(1),
+  username: zod.string(),
   email: zod
     .email()
     .regex(usersPermissionsPostAuthLocalRegisterBodyEmailRegExp),
-  password: zod.string().min(1),
+  password: zod.string(),
 });
 
 export const usersPermissionsPostAuthLocalRegisterResponse = zod.union([

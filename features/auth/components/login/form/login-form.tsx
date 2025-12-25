@@ -1,5 +1,6 @@
 "use client";
 import { FormCardWrapper } from "@/components/form-card-wrapper/form-card-wrapper";
+import { RegisterLinkButton } from "@/components/register-link-button";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -9,15 +10,15 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useLogin } from "../../../hooks/use-login.hook";
 import { zodLoginFormSchema } from "../../../validations/auth-forms.zod";
+import { LogInIcon } from "lucide-react";
 
 export const LoginForm = () => {
-  const { mutate: loginMutate, isPending: isLoginPending } = useLogin();
-
   const form = useForm({
     defaultValues: {
       email: "",
@@ -25,14 +26,27 @@ export const LoginForm = () => {
     },
     validators: {
       onSubmitAsync: zodLoginFormSchema,
+      onChange: () => {
+        if (form.state.errorMap.onServer) {
+          form.setErrorMap({
+            onServer: undefined,
+          });
+        }
+      },
     },
     onSubmit({ value }) {
       loginMutate(value);
     },
   });
+
+  const { mutate: loginMutate, isPending: isLoginPending } = useLogin({ form });
+
   return (
     <FormCardWrapper
-      title="Login"
+      title=<span className="flex items-center gap-2">
+        <LogInIcon />
+        Login
+      </span>
       description="Enter your credentials below to login to your account"
       formReset={form.reset}
     >
@@ -48,8 +62,13 @@ export const LoginForm = () => {
             <FieldGroup>
               <form.Field name="email">
                 {(field) => {
+                  const serverError = field.state.meta.errorMap?.onServer;
+                  const zodErrors = field.state.meta.errors;
+                  const displayErrors = serverError ? [serverError] : zodErrors;
+
                   const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0;
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>
@@ -63,10 +82,9 @@ export const LoginForm = () => {
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
                         placeholder="fulan@example.com"
+                        required
                       />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
+                      {isInvalid && <FieldError errors={displayErrors} />}
                     </Field>
                   );
                 }}
@@ -74,8 +92,13 @@ export const LoginForm = () => {
 
               <form.Field name="password">
                 {(field) => {
+                  const serverError = field.state.meta.errorMap?.onServer;
+                  const zodErrors = field.state.meta.errors;
+                  const displayErrors = serverError ? [serverError] : zodErrors;
+
                   const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0;
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>Password</FieldLabel>
@@ -88,10 +111,9 @@ export const LoginForm = () => {
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
                         placeholder="********"
+                        required
                       />
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
+                      {isInvalid && <FieldError errors={displayErrors} />}
                     </Field>
                   );
                 }}
@@ -101,7 +123,7 @@ export const LoginForm = () => {
         </CardContent>
 
         <CardFooter>
-          <Field orientation="horizontal">
+          <Field orientation="vertical">
             <Button disabled={isLoginPending} type="submit" form="login-form">
               <Spinner
                 className={cn("hidden", {
@@ -110,6 +132,11 @@ export const LoginForm = () => {
               />
               {!isLoginPending && "Submit"}
             </Button>
+            <FieldError errors={[form.state.errorMap.onServer]} />
+
+            <Separator />
+
+            <RegisterLinkButton variant={"outline"} />
           </Field>
         </CardFooter>
       </>
