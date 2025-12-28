@@ -18,4 +18,5 @@ export const registerAction = asyncHandler(
       username: response.data.user.username,
     };
   },
+  true,
 );

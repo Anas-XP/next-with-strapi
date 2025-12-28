@@ -9,10 +9,12 @@ export const useRegister = ({ form }: { form: AnyFormApi }) => {
   return useMutationEnhanced({
     form,
     mutationFn: registerAction,
-    onSuccess: ({ username }) => {
-      toast.success(`Welcome, ${username}!`, {
-        description: `Now, you can login.`,
-      });
+    onSuccess: ({ success, data }) => {
+      if (success) {
+        toast.success(`Welcome, ${data.username}!`, {
+          description: `Now, you can login.`,
+        });
+      }
     },
   });
 };
