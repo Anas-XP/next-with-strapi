@@ -17,8 +17,11 @@ import { useForm } from "@tanstack/react-form";
 import { useLogin } from "../../../hooks/use-login.hook";
 import { zodLoginFormSchema } from "../../../validations/auth-forms.zod";
 import { LogInIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || undefined;
   const form = useForm({
     defaultValues: {
       email: "",
@@ -35,7 +38,7 @@ export const LoginForm = () => {
       },
     },
     onSubmit({ value }) {
-      loginMutate(value);
+      loginMutate({ ...value, callbackUrl });
     },
   });
 

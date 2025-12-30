@@ -1,7 +1,8 @@
-import { LogInLinkButton } from "@/components/login-link-button";
-import { RegisterLinkButton } from "@/components/register-link-button";
+import { Spinner } from "@/components/ui/spinner";
+import { LandingPageButtons } from "@/features/landing-page/components/landing-page-buttons";
 import { getSafeLocale } from "@/lib/i18n.utils";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export default async function Home({
   params,
@@ -9,6 +10,7 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   await getSafeLocale(params);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black">
@@ -29,8 +31,9 @@ export default async function Home({
           </p>
         </div>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <LogInLinkButton />
-          <RegisterLinkButton />
+          <Suspense fallback={<Spinner />}>
+            <LandingPageButtons />
+          </Suspense>
         </div>
       </main>
     </div>

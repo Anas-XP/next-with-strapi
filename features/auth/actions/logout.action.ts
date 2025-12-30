@@ -1,12 +1,11 @@
 "use server";
-import { getEnv } from "@/lib/env.utils";
+import { asyncHandler } from "@/lib/error-handling/async-handler.utils";
+import { revalidatePath } from "next/cache";
 import { userPermissionPluginAPI } from "../config";
 import { logoutFromCookies } from "./auth-cookies.actions";
-import { asyncHandler } from "@/lib/error-handling/async-handler.utils";
 
-const getLogoutRedirectURL = () => {
-  return getEnv("AFTER_LOGOUT_REDIRECT_URL", { required: true });
-};
+import { redirect } from "next/navigation";
+import { AFTER_LOGIN_REDIRECT_URL } from "../utils";
 
 const logoutFromStrapi = userPermissionPluginAPI.usersPermissionsPostAuthLogout;
 
@@ -15,7 +14,7 @@ export const logoutAction = asyncHandler(async () => {
 
   await logoutFromCookies();
 
-  return {
-    redirectURL: getLogoutRedirectURL(),
-  };
+  revalidatePath("/", "layout");
+
+  redirect(AFTER_LOGIN_REDIRECT_URL);
 });

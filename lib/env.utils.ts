@@ -1,19 +1,33 @@
-type availableEnvKeys =
+type TEAvailableEnvKeys =
   | "STRAPI_API_URL"
   | "STRAPI_API_TOKEN"
-  | "AFTER_LOGIN_REDIRECT_URL"
-  | "AFTER_LOGOUT_REDIRECT_URL"
   | "NODE_ENV"
   // NEXT_PUBLIC_
-  | "NEXT_PUBLIC_SHOW_REACT_QUERY_DEV_TOOLS";
+  | "NEXT_PUBLIC_SHOW_REACT_QUERY_DEV_TOOLS"
+  | "NEXT_PUBLIC_AFTER_LOGIN_REDIRECT_URL"
+  | "NEXT_PUBLIC_AFTER_LOGOUT_REDIRECT_URL";
+
+const envs: Record<TEAvailableEnvKeys, string | undefined> = {
+  STRAPI_API_URL: process.env.STRAPI_API_URL,
+
+  STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN,
+  NODE_ENV: process.env.NODE_ENV,
+
+  NEXT_PUBLIC_SHOW_REACT_QUERY_DEV_TOOLS:
+    process.env.NEXT_PUBLIC_SHOW_REACT_QUERY_DEV_TOOLS,
+  NEXT_PUBLIC_AFTER_LOGIN_REDIRECT_URL:
+    process.env.NEXT_PUBLIC_AFTER_LOGIN_REDIRECT_URL,
+  NEXT_PUBLIC_AFTER_LOGOUT_REDIRECT_URL:
+    process.env.NEXT_PUBLIC_AFTER_LOGOUT_REDIRECT_URL,
+};
 
 export function getEnv(
-  key: availableEnvKeys,
+  key: TEAvailableEnvKeys,
   options: { defaultValue: string } | { required: true },
 ): string;
 
 export function getEnv(
-  key: availableEnvKeys,
+  key: TEAvailableEnvKeys,
   options?: { required: false },
 ): string | undefined;
 
@@ -39,7 +53,7 @@ export function getEnv(
  * - A required environment variable is missing.
  */
 export function getEnv(
-  key: availableEnvKeys,
+  key: TEAvailableEnvKeys,
   options?: { defaultValue: string } | { required: boolean },
 ): string | undefined {
   if (!process.env.NEXT_PUBLIC_ENABLE_GET_ENV) return "";
@@ -50,7 +64,7 @@ export function getEnv(
     );
   }
 
-  const value = process.env[key];
+  const value = envs[key];
 
   if (!value && options && "required" in options && options.required === true) {
     throw new Error(`Missing required environment variable: ${key}`);

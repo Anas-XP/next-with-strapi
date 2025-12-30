@@ -2,6 +2,7 @@ import React from "react";
 import { LinkEnhanced } from "./enhanced/link.enhanced";
 import { LogInIcon } from "lucide-react";
 import { buttonVariants } from "./ui/button";
+import { LOGIN_URL } from "@/features/auth/utils";
 
 export const LogInLinkButton = ({
   variant,
@@ -9,7 +10,7 @@ export const LogInLinkButton = ({
   variant?: NonNullable<Parameters<typeof buttonVariants>["0"]>["variant"];
 }) => {
   return (
-    <LinkEnhanced href={"/login"} className={buttonVariants({ variant })}>
+    <LinkEnhanced href={LOGIN_URL} className={buttonVariants({ variant })}>
       <LogInIcon />
       Login
     </LinkEnhanced>

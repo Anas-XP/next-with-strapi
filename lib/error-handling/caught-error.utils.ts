@@ -4,6 +4,7 @@ import {
   ZEErrorName,
   ZStrapiErrorResponse,
 } from "./zod-error.schemas";
+import { getAxiosErrorMessage } from "./error-messages.utils";
 
 export class CaughtError extends Error {
   status: number;
@@ -30,6 +31,7 @@ export class CaughtError extends Error {
 
     if (axios.isAxiosError(error)) {
       const responseData = error.response?.data;
+      const axiosErrorMessage = getAxiosErrorMessage(error);
 
       const parsedStrapi = ZStrapiErrorResponse.safeParse(responseData);
 
@@ -39,7 +41,7 @@ export class CaughtError extends Error {
         const finalName = nameParse.success ? nameParse.data : "StrapiError";
 
         return new CaughtError(
-          strapiError.message,
+          axiosErrorMessage,
           error.response?.status || 500,
           strapiError.details,
           finalName,
@@ -47,7 +49,7 @@ export class CaughtError extends Error {
       }
 
       return new CaughtError(
-        error.message,
+        axiosErrorMessage,
         error.response?.status || 500,
         null,
         "AxiosError",

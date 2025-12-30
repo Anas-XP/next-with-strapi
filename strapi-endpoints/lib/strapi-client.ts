@@ -1,9 +1,10 @@
 "use server";
 
-import { asyncHandler } from "@/lib/error-handling/async-handler.utils";
+import { JWT_COOKIE_NAME } from "@/features/auth/config";
 import { getEnv } from "@/lib/env.utils";
-import axios from "axios";
+import { asyncHandler } from "@/lib/error-handling/async-handler.utils";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from "axios";
 import { cookies } from "next/headers";
 
 const BASE_URL = getEnv("STRAPI_API_URL", { required: true });
@@ -28,9 +29,9 @@ export const strapiClient = async <T>(
 ): Promise<AxiosResponse<T>> =>
   asyncHandler(
     async (config: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-      // 1. Check for the user token first
+      // 1. Check for the user token first∏
       const cookieStore = await cookies();
-      const userToken = cookieStore.get("jwt")?.value;
+      const userToken = cookieStore.get(JWT_COOKIE_NAME)?.value;
 
       // 2. Determine which token to use
       // If userToken exists, use it. Otherwise, fallback to the Admin Token.

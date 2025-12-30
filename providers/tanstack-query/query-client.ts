@@ -1,4 +1,5 @@
 import { showToastFromError } from "@/hooks/show-error-toast";
+import { isNextRedirect } from "@/lib/next-redirect.utils";
 import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient({
@@ -16,9 +17,13 @@ export const queryClient = new QueryClient({
     },
   },
   mutationCache: new MutationCache({
-    onSuccess(data) {},
+    onSuccess() {},
     onError: (error, _variables, _context, mutation) => {
       if (mutation.options.meta?.disableGlobalErrorHandling) return;
+
+      if (isNextRedirect(error)) {
+        return;
+      }
 
       showToastFromError(error);
     },

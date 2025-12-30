@@ -9,6 +9,8 @@ export const ZEErrorName = z.enum([
   "StrapiError",
   "UnexpectedError",
   "ApplicationError",
+  "AggregateError",
+  "AuthError",
 ]);
 
 // 2. Strapi Validation Details

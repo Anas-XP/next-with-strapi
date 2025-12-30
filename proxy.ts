@@ -4,12 +4,13 @@ import { NextProxy, NextResponse } from "next/server";
 import { checkAuthCookies } from "./features/auth/actions/auth-cookies.actions";
 import { routing } from "./i18n/routing";
 import { getEnv } from "./lib/env.utils";
+import { LOGIN_URL, REGISTER_URL } from "./features/auth/utils";
 
 const publicRoutes = ["/"];
 
 const authRoutes = [
-  "/login",
-  "/register",
+  LOGIN_URL,
+  REGISTER_URL,
   // "/forgot-password"
 ];
 
@@ -42,7 +43,7 @@ const proxy: NextProxy = async (request) => {
     if (!isAuthPage) return handleI18nRouting(request);
 
     const dashboardUrl = new URL(
-      `/${locale}${getEnv("AFTER_LOGIN_REDIRECT_URL")}`,
+      `/${locale}${getEnv("NEXT_PUBLIC_AFTER_LOGIN_REDIRECT_URL")}`,
       request.url,
     );
 
@@ -52,7 +53,7 @@ const proxy: NextProxy = async (request) => {
   if (isAuthPage) return handleI18nRouting(request);
 
   const signInUrl = new URL(
-    `/${locale}${getEnv("AFTER_LOGOUT_REDIRECT_URL")}`,
+    `/${locale}${getEnv("NEXT_PUBLIC_AFTER_LOGOUT_REDIRECT_URL")}`,
     request.url,
   );
   signInUrl.searchParams.set(
