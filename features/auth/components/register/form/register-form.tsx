@@ -5,7 +5,7 @@ import { useRegister } from "@/features/auth/hooks/use-register.hook";
 import { zodRegisterFormSchema } from "@/features/auth/validations/auth-forms.zod";
 import { useForm } from "@tanstack/react-form";
 
-import { LogInLinkButton } from "@/components/login-link-button";
+import { LogInLinkButton } from "@/features/auth/components/login/button/login-link-button";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import {

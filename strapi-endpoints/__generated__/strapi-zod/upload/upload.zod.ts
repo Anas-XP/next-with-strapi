@@ -65,8 +65,8 @@ export const uploadPostResponse = zod.union([
     provider_metadata: zod
       .union([zod.record(zod.string(), zod.unknown()), zod.null()])
       .optional(),
-    createdAt: zod.string(),
-    updatedAt: zod.string(),
+    createdAt: zod.iso.datetime({}),
+    updatedAt: zod.iso.datetime({}),
     createdBy: zod.number().optional(),
     updatedBy: zod.number().optional(),
   }),
@@ -100,8 +100,8 @@ export const uploadPostResponse = zod.union([
       provider_metadata: zod
         .union([zod.record(zod.string(), zod.unknown()), zod.null()])
         .optional(),
-      createdAt: zod.string(),
-      updatedAt: zod.string(),
+      createdAt: zod.iso.datetime({}),
+      updatedAt: zod.iso.datetime({}),
       createdBy: zod.number().optional(),
       updatedBy: zod.number().optional(),
     }),
@@ -215,8 +215,8 @@ export const uploadGetFilesResponseItem = zod.object({
   provider_metadata: zod
     .union([zod.record(zod.string(), zod.unknown()), zod.null()])
     .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
   createdBy: zod.number().optional(),
   updatedBy: zod.number().optional(),
 });
@@ -280,8 +280,8 @@ export const uploadGetFilesByIdResponse = zod.object({
   provider_metadata: zod
     .union([zod.record(zod.string(), zod.unknown()), zod.null()])
     .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
   createdBy: zod.number().optional(),
   updatedBy: zod.number().optional(),
 });
@@ -332,8 +332,8 @@ export const uploadDeleteFilesByIdResponse = zod.object({
   provider_metadata: zod
     .union([zod.record(zod.string(), zod.unknown()), zod.null()])
     .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
   createdBy: zod.number().optional(),
   updatedBy: zod.number().optional(),
 });

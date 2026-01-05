@@ -1,6 +1,6 @@
 import { LinkEnhanced } from "@/components/enhanced/link.enhanced";
-import { LogInLinkButton } from "@/components/login-link-button";
-import { RegisterLinkButton } from "@/components/register-link-button";
+import { LogInLinkButton } from "@/features/auth/components/login/button/login-link-button";
+import { RegisterLinkButton } from "@/features/auth/components/register/button/register-link-button";
 import { buttonVariants } from "@/components/ui/button";
 import { getCurrentUserAction } from "@/features/auth/actions/protected.actions";
 import { LayoutDashboardIcon } from "lucide-react";

@@ -1,6 +1,6 @@
 "use client";
 import { FormCardWrapper } from "@/components/form-card-wrapper/form-card-wrapper";
-import { RegisterLinkButton } from "@/components/register-link-button";
+import { RegisterLinkButton } from "@/features/auth/components/register/button/register-link-button";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -18,6 +18,9 @@ import { useLogin } from "../../../hooks/use-login.hook";
 import { zodLoginFormSchema } from "../../../validations/auth-forms.zod";
 import { LogInIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { GithubLoginLinkButton } from "../button/github-login-link-button";
+import { GoogleLoginLinkButton } from "../button/google-login-link-button";
+import { MicrosoftLoginLinkButton } from "../button/microsoft-login-link-button";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -140,6 +143,11 @@ export const LoginForm = () => {
             <Separator />
 
             <RegisterLinkButton variant={"outline"} />
+
+            <p className="text-center">Or</p>
+            <GithubLoginLinkButton />
+            <GoogleLoginLinkButton />
+            <MicrosoftLoginLinkButton />
           </Field>
         </CardFooter>
       </>

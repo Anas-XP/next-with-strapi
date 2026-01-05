@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { UsersPermissionsPostAuthLocalRegister200AnyOf } from "./usersPermissionsPostAuthLocalRegister200AnyOf";
-import type { UsersPermissionsPostAuthLocalRegister200AnyOfSix } from "./usersPermissionsPostAuthLocalRegister200AnyOfSix";
+import type { UsersPermissionsPostAuthLocalRegister200AnyOfTwo } from "./usersPermissionsPostAuthLocalRegister200AnyOfTwo";
 
 export type UsersPermissionsPostAuthLocalRegister200 =
   | UsersPermissionsPostAuthLocalRegister200AnyOf
-  | UsersPermissionsPostAuthLocalRegister200AnyOfSix;
+  | UsersPermissionsPostAuthLocalRegister200AnyOfTwo;

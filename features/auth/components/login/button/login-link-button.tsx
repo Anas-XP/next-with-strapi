@@ -1,7 +1,7 @@
 import React from "react";
-import { LinkEnhanced } from "./enhanced/link.enhanced";
+import { LinkEnhanced } from "../../../../../components/enhanced/link.enhanced";
 import { LogInIcon } from "lucide-react";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "../../../../../components/ui/button";
 import { LOGIN_URL } from "@/features/auth/utils";
 
 export const LogInLinkButton = ({

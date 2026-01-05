@@ -5,8 +5,8 @@
  * API documentation for learning-strapi-v-5 v0.1.0
  * OpenAPI spec version: 0.1.0
  */
-import type { UsersPermissionsGetRolesById200Role } from "./usersPermissionsGetRolesById200Role";
+import type { PluginUsersPermissionsRoleDocument } from "./pluginUsersPermissionsRoleDocument";
 
 export type UsersPermissionsGetRolesById200 = {
-  role: UsersPermissionsGetRolesById200Role;
+  role: PluginUsersPermissionsRoleDocument;
 };

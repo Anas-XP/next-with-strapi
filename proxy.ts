@@ -2,28 +2,9 @@ import { hasLocale } from "next-intl";
 import createMiddleware from "next-intl/middleware";
 import { NextProxy, NextResponse } from "next/server";
 import { checkAuthCookies } from "./features/auth/actions/auth-cookies.actions";
+import { authPathnameRegex, publicPathnameRegex } from "./features/auth/utils";
 import { routing } from "./i18n/routing";
 import { getEnv } from "./lib/env.utils";
-import { LOGIN_URL, REGISTER_URL } from "./features/auth/utils";
-
-const publicRoutes = ["/"];
-
-const authRoutes = [
-  LOGIN_URL,
-  REGISTER_URL,
-  // "/forgot-password"
-];
-
-const createPathnameRegex = (routes: string[]) =>
-  RegExp(
-    `^(/(${routing.locales.join("|")}))?(${routes
-      .flatMap((p) => (p === "/" ? ["", "/"] : p))
-      .join("|")})/?$`,
-    "i",
-  );
-
-const publicPathnameRegex = createPathnameRegex(publicRoutes);
-const authPathnameRegex = createPathnameRegex(authRoutes);
 
 const handleI18nRouting = createMiddleware(routing);
 
@@ -37,7 +18,7 @@ const proxy: NextProxy = async (request) => {
   const isPublicPage = publicPathnameRegex.test(pathname);
   if (isPublicPage) return handleI18nRouting(request);
 
-  const hasAuthCookies = await checkAuthCookies();
+  const hasAuthCookies = await checkAuthCookies({ safe: true });
   const isAuthPage = authPathnameRegex.test(pathname);
   if (hasAuthCookies) {
     if (!isAuthPage) return handleI18nRouting(request);

@@ -6,17 +6,16 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
+  PluginUsersPermissionsUserDocument,
   UsersPermissionsDeleteRolesByRole200,
-  UsersPermissionsDeleteUsersById200,
   UsersPermissionsGetAuthByProviderCallback200,
+  UsersPermissionsGetAuthByProviderCallbackParams,
   UsersPermissionsGetPermissions200,
   UsersPermissionsGetRoles200,
   UsersPermissionsGetRolesById200,
-  UsersPermissionsGetUsers200Item,
-  UsersPermissionsGetUsersById200,
+  UsersPermissionsGetUsers200,
   UsersPermissionsGetUsersByIdParams,
   UsersPermissionsGetUsersCountParams,
-  UsersPermissionsGetUsersMe200,
   UsersPermissionsGetUsersMeParams,
   UsersPermissionsGetUsersParams,
   UsersPermissionsPostAuthChangePassword200,
@@ -33,11 +32,9 @@ import type {
   UsersPermissionsPostAuthSendEmailConfirmationBody,
   UsersPermissionsPostRoles200,
   UsersPermissionsPostRolesBody,
-  UsersPermissionsPostUsers200,
   UsersPermissionsPostUsersBody,
   UsersPermissionsPutRolesByRole200,
   UsersPermissionsPutRolesByRoleBody,
-  UsersPermissionsPutUsersById200,
   UsersPermissionsPutUsersByIdBody,
 } from "../learningStrapiV5.schemas";
 
@@ -67,10 +64,17 @@ export const getUsersPermissions = () => {
       data: usersPermissionsPostAuthLocalRegisterBody,
     });
   };
-  const usersPermissionsGetAuthByProviderCallback = (provider: string) => {
+  /**
+   * OAuth callback endpoint for third-party authentication providers
+   */
+  const usersPermissionsGetAuthByProviderCallback = (
+    provider: string,
+    params?: UsersPermissionsGetAuthByProviderCallbackParams,
+  ) => {
     return strapiClient<UsersPermissionsGetAuthByProviderCallback200>({
       url: `/auth/${provider}/callback`,
       method: "GET",
+      params,
     });
   };
   const usersPermissionsPostAuthForgotPassword = (
@@ -130,10 +134,13 @@ export const getUsersPermissions = () => {
   ) => {
     return strapiClient<number>({ url: `/users/count`, method: "GET", params });
   };
+  /**
+   * Get a list of users (requires appropriate permissions)
+   */
   const usersPermissionsGetUsers = (
     params?: UsersPermissionsGetUsersParams,
   ) => {
-    return strapiClient<UsersPermissionsGetUsers200Item[]>({
+    return strapiClient<UsersPermissionsGetUsers200>({
       url: `/users`,
       method: "GET",
       params,
@@ -142,27 +149,33 @@ export const getUsersPermissions = () => {
   const usersPermissionsPostUsers = (
     usersPermissionsPostUsersBody: UsersPermissionsPostUsersBody,
   ) => {
-    return strapiClient<UsersPermissionsPostUsers200>({
+    return strapiClient<PluginUsersPermissionsUserDocument>({
       url: `/users`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
       data: usersPermissionsPostUsersBody,
     });
   };
+  /**
+   * Get the authenticated user profile
+   */
   const usersPermissionsGetUsersMe = (
     params?: UsersPermissionsGetUsersMeParams,
   ) => {
-    return strapiClient<UsersPermissionsGetUsersMe200>({
+    return strapiClient<PluginUsersPermissionsUserDocument>({
       url: `/users/me`,
       method: "GET",
       params,
     });
   };
+  /**
+   * Get a specific user by ID
+   */
   const usersPermissionsGetUsersById = (
     id: string,
     params?: UsersPermissionsGetUsersByIdParams,
   ) => {
-    return strapiClient<UsersPermissionsGetUsersById200>({
+    return strapiClient<PluginUsersPermissionsUserDocument>({
       url: `/users/${id}`,
       method: "GET",
       params,
@@ -172,7 +185,7 @@ export const getUsersPermissions = () => {
     id: string,
     usersPermissionsPutUsersByIdBody: UsersPermissionsPutUsersByIdBody,
   ) => {
-    return strapiClient<UsersPermissionsPutUsersById200>({
+    return strapiClient<PluginUsersPermissionsUserDocument>({
       url: `/users/${id}`,
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -180,7 +193,7 @@ export const getUsersPermissions = () => {
     });
   };
   const usersPermissionsDeleteUsersById = (id: string) => {
-    return strapiClient<UsersPermissionsDeleteUsersById200>({
+    return strapiClient<PluginUsersPermissionsUserDocument>({
       url: `/users/${id}`,
       method: "DELETE",
     });

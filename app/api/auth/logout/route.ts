@@ -1,15 +1,13 @@
 import { logoutFromCookies } from "@/features/auth/actions/auth-cookies.actions";
 import { AFTER_LOGOUT_REDIRECT_URL } from "@/features/auth/utils";
-import { redirect } from "@/i18n/navigation";
-import { getLocale } from "next-intl/server";
 import { revalidatePath } from "next/cache";
+import { AppRouteHandlerFn } from "next/dist/server/route-modules/app-route/module";
+import { NextResponse } from "next/server";
 
-export async function GET() {
-  const locale = await getLocale();
-
+export const GET: AppRouteHandlerFn = async () => {
   await logoutFromCookies();
 
   revalidatePath("/", "layout");
 
-  redirect({ href: AFTER_LOGOUT_REDIRECT_URL, locale });
-}
+  return NextResponse.redirect(AFTER_LOGOUT_REDIRECT_URL);
+};

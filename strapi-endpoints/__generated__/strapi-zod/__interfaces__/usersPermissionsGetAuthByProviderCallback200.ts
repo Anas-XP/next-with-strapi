@@ -5,10 +5,10 @@
  * API documentation for learning-strapi-v-5 v0.1.0
  * OpenAPI spec version: 0.1.0
  */
-import type { UsersPermissionsGetAuthByProviderCallback200User } from "./usersPermissionsGetAuthByProviderCallback200User";
+import type { PluginUsersPermissionsUserDocument } from "./pluginUsersPermissionsUserDocument";
 
 export type UsersPermissionsGetAuthByProviderCallback200 = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsGetAuthByProviderCallback200User;
+  user: PluginUsersPermissionsUserDocument;
 };

@@ -12,34 +12,152 @@ export const usersPermissionsPostAuthLocalBody = zod.object({
   password: zod.string(),
 });
 
+export const usersPermissionsPostAuthLocalResponseUserDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalResponseUserEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+);
+export const usersPermissionsPostAuthLocalResponseUserConfirmedDefault = false;
+export const usersPermissionsPostAuthLocalResponseUserBlockedDefault = false;
+export const usersPermissionsPostAuthLocalResponseUserIsPhoneVerifiedDefault = false;
+export const usersPermissionsPostAuthLocalResponseUserRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalResponseUserRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalResponseUserPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalResponseUserPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsPostAuthLocalResponseUserPhoneNumversItemDumbNumberMax = 9007199254740991;
+
 export const usersPermissionsPostAuthLocalResponse = zod.object({
   jwt: zod.string(),
   refreshToken: zod.string().optional(),
-  user: zod.object({
-    id: zod.number(),
-    documentId: zod.string(),
-    username: zod.string(),
-    email: zod.string(),
-    provider: zod.string(),
-    confirmed: zod.boolean(),
-    blocked: zod.boolean(),
-    role: zod
-      .union([
-        zod.number(),
-        zod.object({
-          id: zod.number(),
-          name: zod.string(),
-          description: zod.union([zod.string(), zod.null()]),
-          type: zod.string(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        }),
-      ])
-      .optional(),
-    createdAt: zod.string(),
-    updatedAt: zod.string(),
-    publishedAt: zod.string(),
-  }),
+  user: zod
+    .object({
+      documentId: zod
+        .uuid()
+        .regex(usersPermissionsPostAuthLocalResponseUserDocumentIdRegExp)
+        .describe("Unique document identifier (UUID v4)"),
+      id: zod.union([zod.string(), zod.number()]),
+      username: zod
+        .string()
+        .describe("User's unique username for authentication"),
+      email: zod
+        .email()
+        .regex(usersPermissionsPostAuthLocalResponseUserEmailRegExp)
+        .describe("User's email address (unique, validated)"),
+      provider: zod.string().optional().describe("A string field"),
+      confirmed: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether email has been confirmed"),
+      blocked: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether user is blocked from accessing the system"),
+      isPhoneVerified: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether phone number has been verified"),
+      createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+      role: zod
+        .object({
+          documentId: zod
+            .uuid()
+            .regex(
+              usersPermissionsPostAuthLocalResponseUserRoleDocumentIdRegExp,
+            )
+            .describe("The document ID, represented by a UUID"),
+          id: zod.union([zod.string(), zod.number()]),
+          name: zod.string().describe("A string field"),
+          description: zod.string().optional().describe("A string field"),
+          type: zod.string().optional().describe("A string field"),
+          createdAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          updatedAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+          permissions: zod
+            .array(
+              zod.object({
+                documentId: zod
+                  .uuid()
+                  .regex(
+                    usersPermissionsPostAuthLocalResponseUserRolePermissionsItemDocumentIdRegExp,
+                  )
+                  .describe("The document ID, represented by a UUID"),
+                id: zod.union([zod.string(), zod.number()]),
+                action: zod.string().describe("A string field"),
+                createdAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                updatedAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+                role: zod.unknown().optional(),
+              }),
+            )
+            .optional()
+            .describe("A relational field"),
+          users: zod
+            .array(zod.unknown())
+            .optional()
+            .describe("A relational field"),
+        })
+        .optional(),
+      phone_numvers: zod
+        .array(
+          zod
+            .object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsPostAuthLocalResponseUserPhoneNumversItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              dumb_number: zod
+                .number()
+                .min(
+                  usersPermissionsPostAuthLocalResponseUserPhoneNumversItemDumbNumberMin,
+                )
+                .max(
+                  usersPermissionsPostAuthLocalResponseUserPhoneNumversItemDumbNumberMax,
+                )
+                .optional()
+                .describe("An integer field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              user: zod.unknown().optional(),
+            })
+            .describe("Phone number entity"),
+        )
+        .optional()
+        .describe("A relational field"),
+    })
+    .describe("User document with authentication and profile information"),
 });
 
 export const usersPermissionsPostAuthLocalRegisterBodyEmailRegExp = new RegExp(
@@ -54,97 +172,489 @@ export const usersPermissionsPostAuthLocalRegisterBody = zod.object({
   password: zod.string(),
 });
 
+export const usersPermissionsPostAuthLocalRegisterResponseUserDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserEmailRegExp =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserConfirmedDefault = false;
+export const usersPermissionsPostAuthLocalRegisterResponseUserBlockedDefault = false;
+export const usersPermissionsPostAuthLocalRegisterResponseUserIsPhoneVerifiedDefault = false;
+export const usersPermissionsPostAuthLocalRegisterResponseUserRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMax = 9007199254740991;
+
+export const usersPermissionsPostAuthLocalRegisterResponseUserDocumentIdRegExpOne =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserEmailRegExpOne =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserConfirmedDefaultThree = false;
+export const usersPermissionsPostAuthLocalRegisterResponseUserBlockedDefaultThree = false;
+export const usersPermissionsPostAuthLocalRegisterResponseUserIsPhoneVerifiedDefaultThree = false;
+export const usersPermissionsPostAuthLocalRegisterResponseUserRoleDocumentIdRegExpOne =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserRolePermissionsItemDocumentIdRegExpOne =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDocumentIdRegExpOne =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMinOne =
+  -9007199254740991;
+export const usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMaxOne = 9007199254740991;
+
 export const usersPermissionsPostAuthLocalRegisterResponse = zod.union([
   zod.object({
     jwt: zod.string(),
     refreshToken: zod.string().optional(),
-    user: zod.object({
-      id: zod.number(),
-      documentId: zod.string(),
-      username: zod.string(),
-      email: zod.string(),
-      provider: zod.string(),
-      confirmed: zod.boolean(),
-      blocked: zod.boolean(),
-      role: zod
-        .union([
-          zod.number(),
-          zod.object({
-            id: zod.number(),
-            name: zod.string(),
-            description: zod.union([zod.string(), zod.null()]),
-            type: zod.string(),
-            createdAt: zod.string(),
-            updatedAt: zod.string(),
-          }),
-        ])
-        .optional(),
-      createdAt: zod.string(),
-      updatedAt: zod.string(),
-      publishedAt: zod.string(),
-    }),
+    user: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(
+            usersPermissionsPostAuthLocalRegisterResponseUserDocumentIdRegExp,
+          )
+          .describe("Unique document identifier (UUID v4)"),
+        id: zod.union([zod.string(), zod.number()]),
+        username: zod
+          .string()
+          .describe("User's unique username for authentication"),
+        email: zod
+          .email()
+          .regex(usersPermissionsPostAuthLocalRegisterResponseUserEmailRegExp)
+          .describe("User's email address (unique, validated)"),
+        provider: zod.string().optional().describe("A string field"),
+        confirmed: zod
+          .union([zod.boolean(), zod.null()])
+          .describe("Whether email has been confirmed"),
+        blocked: zod
+          .union([zod.boolean(), zod.null()])
+          .describe("Whether user is blocked from accessing the system"),
+        isPhoneVerified: zod
+          .union([zod.boolean(), zod.null()])
+          .describe("Whether phone number has been verified"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        role: zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsPostAuthLocalRegisterResponseUserRoleDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            name: zod.string().describe("A string field"),
+            description: zod.string().optional().describe("A string field"),
+            type: zod.string().optional().describe("A string field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            permissions: zod
+              .array(
+                zod.object({
+                  documentId: zod
+                    .uuid()
+                    .regex(
+                      usersPermissionsPostAuthLocalRegisterResponseUserRolePermissionsItemDocumentIdRegExp,
+                    )
+                    .describe("The document ID, represented by a UUID"),
+                  id: zod.union([zod.string(), zod.number()]),
+                  action: zod.string().describe("A string field"),
+                  createdAt: zod.iso
+                    .datetime({})
+                    .optional()
+                    .describe("A datetime field"),
+                  updatedAt: zod.iso
+                    .datetime({})
+                    .optional()
+                    .describe("A datetime field"),
+                  publishedAt: zod.iso
+                    .datetime({})
+                    .describe("A datetime field"),
+                  role: zod.unknown().optional(),
+                }),
+              )
+              .optional()
+              .describe("A relational field"),
+            users: zod
+              .array(zod.unknown())
+              .optional()
+              .describe("A relational field"),
+          })
+          .optional(),
+        phone_numvers: zod
+          .array(
+            zod
+              .object({
+                documentId: zod
+                  .uuid()
+                  .regex(
+                    usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDocumentIdRegExp,
+                  )
+                  .describe("The document ID, represented by a UUID"),
+                id: zod.union([zod.string(), zod.number()]),
+                dumb_number: zod
+                  .number()
+                  .min(
+                    usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMin,
+                  )
+                  .max(
+                    usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMax,
+                  )
+                  .optional()
+                  .describe("An integer field"),
+                createdAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                updatedAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+                user: zod.unknown().optional(),
+              })
+              .describe("Phone number entity"),
+          )
+          .optional()
+          .describe("A relational field"),
+      })
+      .describe("User document with authentication and profile information"),
   }),
   zod.object({
-    user: zod.object({
-      id: zod.number(),
-      documentId: zod.string(),
-      username: zod.string(),
-      email: zod.string(),
-      provider: zod.string(),
-      confirmed: zod.boolean(),
-      blocked: zod.boolean(),
-      role: zod
-        .union([
-          zod.number(),
-          zod.object({
-            id: zod.number(),
-            name: zod.string(),
-            description: zod.union([zod.string(), zod.null()]),
-            type: zod.string(),
-            createdAt: zod.string(),
-            updatedAt: zod.string(),
-          }),
-        ])
-        .optional(),
-      createdAt: zod.string(),
-      updatedAt: zod.string(),
-      publishedAt: zod.string(),
-    }),
+    user: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(
+            usersPermissionsPostAuthLocalRegisterResponseUserDocumentIdRegExpOne,
+          )
+          .describe("Unique document identifier (UUID v4)"),
+        id: zod.union([zod.string(), zod.number()]),
+        username: zod
+          .string()
+          .describe("User's unique username for authentication"),
+        email: zod
+          .email()
+          .regex(
+            usersPermissionsPostAuthLocalRegisterResponseUserEmailRegExpOne,
+          )
+          .describe("User's email address (unique, validated)"),
+        provider: zod.string().optional().describe("A string field"),
+        confirmed: zod
+          .union([zod.boolean(), zod.null()])
+          .describe("Whether email has been confirmed"),
+        blocked: zod
+          .union([zod.boolean(), zod.null()])
+          .describe("Whether user is blocked from accessing the system"),
+        isPhoneVerified: zod
+          .union([zod.boolean(), zod.null()])
+          .describe("Whether phone number has been verified"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        role: zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsPostAuthLocalRegisterResponseUserRoleDocumentIdRegExpOne,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            name: zod.string().describe("A string field"),
+            description: zod.string().optional().describe("A string field"),
+            type: zod.string().optional().describe("A string field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            permissions: zod
+              .array(
+                zod.object({
+                  documentId: zod
+                    .uuid()
+                    .regex(
+                      usersPermissionsPostAuthLocalRegisterResponseUserRolePermissionsItemDocumentIdRegExpOne,
+                    )
+                    .describe("The document ID, represented by a UUID"),
+                  id: zod.union([zod.string(), zod.number()]),
+                  action: zod.string().describe("A string field"),
+                  createdAt: zod.iso
+                    .datetime({})
+                    .optional()
+                    .describe("A datetime field"),
+                  updatedAt: zod.iso
+                    .datetime({})
+                    .optional()
+                    .describe("A datetime field"),
+                  publishedAt: zod.iso
+                    .datetime({})
+                    .describe("A datetime field"),
+                  role: zod.unknown().optional(),
+                }),
+              )
+              .optional()
+              .describe("A relational field"),
+            users: zod
+              .array(zod.unknown())
+              .optional()
+              .describe("A relational field"),
+          })
+          .optional(),
+        phone_numvers: zod
+          .array(
+            zod
+              .object({
+                documentId: zod
+                  .uuid()
+                  .regex(
+                    usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDocumentIdRegExpOne,
+                  )
+                  .describe("The document ID, represented by a UUID"),
+                id: zod.union([zod.string(), zod.number()]),
+                dumb_number: zod
+                  .number()
+                  .min(
+                    usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMinOne,
+                  )
+                  .max(
+                    usersPermissionsPostAuthLocalRegisterResponseUserPhoneNumversItemDumbNumberMaxOne,
+                  )
+                  .optional()
+                  .describe("An integer field"),
+                createdAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                updatedAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+                user: zod.unknown().optional(),
+              })
+              .describe("Phone number entity"),
+          )
+          .optional()
+          .describe("A relational field"),
+      })
+      .describe("User document with authentication and profile information"),
   }),
 ]);
 
+/**
+ * OAuth callback endpoint for third-party authentication providers
+ */
 export const usersPermissionsGetAuthByProviderCallbackParams = zod.object({
   provider: zod.string(),
 });
 
+export const usersPermissionsGetAuthByProviderCallbackQueryParams = zod.object({
+  access_token: zod
+    .string()
+    .optional()
+    .describe("OAuth access token returned by provider"),
+  code: zod.string().optional().describe("OAuth authorization code"),
+  state: zod
+    .string()
+    .optional()
+    .describe("OAuth state parameter for CSRF protection"),
+  error: zod
+    .string()
+    .optional()
+    .describe("OAuth error code if authentication failed"),
+  error_description: zod
+    .string()
+    .optional()
+    .describe("Human-readable error description"),
+});
+
+export const usersPermissionsGetAuthByProviderCallbackResponseUserDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetAuthByProviderCallbackResponseUserEmailRegExp =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsGetAuthByProviderCallbackResponseUserConfirmedDefault = false;
+export const usersPermissionsGetAuthByProviderCallbackResponseUserBlockedDefault = false;
+export const usersPermissionsGetAuthByProviderCallbackResponseUserIsPhoneVerifiedDefault = false;
+export const usersPermissionsGetAuthByProviderCallbackResponseUserRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetAuthByProviderCallbackResponseUserRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetAuthByProviderCallbackResponseUserPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetAuthByProviderCallbackResponseUserPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsGetAuthByProviderCallbackResponseUserPhoneNumversItemDumbNumberMax = 9007199254740991;
+
 export const usersPermissionsGetAuthByProviderCallbackResponse = zod.object({
   jwt: zod.string(),
   refreshToken: zod.string().optional(),
-  user: zod.object({
-    id: zod.number(),
-    documentId: zod.string(),
-    username: zod.string(),
-    email: zod.string(),
-    provider: zod.string(),
-    confirmed: zod.boolean(),
-    blocked: zod.boolean(),
-    role: zod
-      .union([
-        zod.number(),
-        zod.object({
-          id: zod.number(),
-          name: zod.string(),
-          description: zod.union([zod.string(), zod.null()]),
-          type: zod.string(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        }),
-      ])
-      .optional(),
-    createdAt: zod.string(),
-    updatedAt: zod.string(),
-    publishedAt: zod.string(),
-  }),
+  user: zod
+    .object({
+      documentId: zod
+        .uuid()
+        .regex(
+          usersPermissionsGetAuthByProviderCallbackResponseUserDocumentIdRegExp,
+        )
+        .describe("Unique document identifier (UUID v4)"),
+      id: zod.union([zod.string(), zod.number()]),
+      username: zod
+        .string()
+        .describe("User's unique username for authentication"),
+      email: zod
+        .email()
+        .regex(usersPermissionsGetAuthByProviderCallbackResponseUserEmailRegExp)
+        .describe("User's email address (unique, validated)"),
+      provider: zod.string().optional().describe("A string field"),
+      confirmed: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether email has been confirmed"),
+      blocked: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether user is blocked from accessing the system"),
+      isPhoneVerified: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether phone number has been verified"),
+      createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+      role: zod
+        .object({
+          documentId: zod
+            .uuid()
+            .regex(
+              usersPermissionsGetAuthByProviderCallbackResponseUserRoleDocumentIdRegExp,
+            )
+            .describe("The document ID, represented by a UUID"),
+          id: zod.union([zod.string(), zod.number()]),
+          name: zod.string().describe("A string field"),
+          description: zod.string().optional().describe("A string field"),
+          type: zod.string().optional().describe("A string field"),
+          createdAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          updatedAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+          permissions: zod
+            .array(
+              zod.object({
+                documentId: zod
+                  .uuid()
+                  .regex(
+                    usersPermissionsGetAuthByProviderCallbackResponseUserRolePermissionsItemDocumentIdRegExp,
+                  )
+                  .describe("The document ID, represented by a UUID"),
+                id: zod.union([zod.string(), zod.number()]),
+                action: zod.string().describe("A string field"),
+                createdAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                updatedAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+                role: zod.unknown().optional(),
+              }),
+            )
+            .optional()
+            .describe("A relational field"),
+          users: zod
+            .array(zod.unknown())
+            .optional()
+            .describe("A relational field"),
+        })
+        .optional(),
+      phone_numvers: zod
+        .array(
+          zod
+            .object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsGetAuthByProviderCallbackResponseUserPhoneNumversItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              dumb_number: zod
+                .number()
+                .min(
+                  usersPermissionsGetAuthByProviderCallbackResponseUserPhoneNumversItemDumbNumberMin,
+                )
+                .max(
+                  usersPermissionsGetAuthByProviderCallbackResponseUserPhoneNumversItemDumbNumberMax,
+                )
+                .optional()
+                .describe("An integer field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              user: zod.unknown().optional(),
+            })
+            .describe("Phone number entity"),
+        )
+        .optional()
+        .describe("A relational field"),
+    })
+    .describe("User document with authentication and profile information"),
 });
 
 export const usersPermissionsPostAuthForgotPasswordBodyEmailRegExp = new RegExp(
@@ -167,34 +677,155 @@ export const usersPermissionsPostAuthResetPasswordBody = zod.object({
   passwordConfirmation: zod.string(),
 });
 
+export const usersPermissionsPostAuthResetPasswordResponseUserDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthResetPasswordResponseUserEmailRegExp =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsPostAuthResetPasswordResponseUserConfirmedDefault = false;
+export const usersPermissionsPostAuthResetPasswordResponseUserBlockedDefault = false;
+export const usersPermissionsPostAuthResetPasswordResponseUserIsPhoneVerifiedDefault = false;
+export const usersPermissionsPostAuthResetPasswordResponseUserRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthResetPasswordResponseUserRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthResetPasswordResponseUserPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthResetPasswordResponseUserPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsPostAuthResetPasswordResponseUserPhoneNumversItemDumbNumberMax = 9007199254740991;
+
 export const usersPermissionsPostAuthResetPasswordResponse = zod.object({
   jwt: zod.string(),
   refreshToken: zod.string().optional(),
-  user: zod.object({
-    id: zod.number(),
-    documentId: zod.string(),
-    username: zod.string(),
-    email: zod.string(),
-    provider: zod.string(),
-    confirmed: zod.boolean(),
-    blocked: zod.boolean(),
-    role: zod
-      .union([
-        zod.number(),
-        zod.object({
-          id: zod.number(),
-          name: zod.string(),
-          description: zod.union([zod.string(), zod.null()]),
-          type: zod.string(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        }),
-      ])
-      .optional(),
-    createdAt: zod.string(),
-    updatedAt: zod.string(),
-    publishedAt: zod.string(),
-  }),
+  user: zod
+    .object({
+      documentId: zod
+        .uuid()
+        .regex(
+          usersPermissionsPostAuthResetPasswordResponseUserDocumentIdRegExp,
+        )
+        .describe("Unique document identifier (UUID v4)"),
+      id: zod.union([zod.string(), zod.number()]),
+      username: zod
+        .string()
+        .describe("User's unique username for authentication"),
+      email: zod
+        .email()
+        .regex(usersPermissionsPostAuthResetPasswordResponseUserEmailRegExp)
+        .describe("User's email address (unique, validated)"),
+      provider: zod.string().optional().describe("A string field"),
+      confirmed: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether email has been confirmed"),
+      blocked: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether user is blocked from accessing the system"),
+      isPhoneVerified: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether phone number has been verified"),
+      createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+      role: zod
+        .object({
+          documentId: zod
+            .uuid()
+            .regex(
+              usersPermissionsPostAuthResetPasswordResponseUserRoleDocumentIdRegExp,
+            )
+            .describe("The document ID, represented by a UUID"),
+          id: zod.union([zod.string(), zod.number()]),
+          name: zod.string().describe("A string field"),
+          description: zod.string().optional().describe("A string field"),
+          type: zod.string().optional().describe("A string field"),
+          createdAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          updatedAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+          permissions: zod
+            .array(
+              zod.object({
+                documentId: zod
+                  .uuid()
+                  .regex(
+                    usersPermissionsPostAuthResetPasswordResponseUserRolePermissionsItemDocumentIdRegExp,
+                  )
+                  .describe("The document ID, represented by a UUID"),
+                id: zod.union([zod.string(), zod.number()]),
+                action: zod.string().describe("A string field"),
+                createdAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                updatedAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+                role: zod.unknown().optional(),
+              }),
+            )
+            .optional()
+            .describe("A relational field"),
+          users: zod
+            .array(zod.unknown())
+            .optional()
+            .describe("A relational field"),
+        })
+        .optional(),
+      phone_numvers: zod
+        .array(
+          zod
+            .object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsPostAuthResetPasswordResponseUserPhoneNumversItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              dumb_number: zod
+                .number()
+                .min(
+                  usersPermissionsPostAuthResetPasswordResponseUserPhoneNumversItemDumbNumberMin,
+                )
+                .max(
+                  usersPermissionsPostAuthResetPasswordResponseUserPhoneNumversItemDumbNumberMax,
+                )
+                .optional()
+                .describe("An integer field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              user: zod.unknown().optional(),
+            })
+            .describe("Phone number entity"),
+        )
+        .optional()
+        .describe("A relational field"),
+    })
+    .describe("User document with authentication and profile information"),
 });
 
 export const usersPermissionsPostAuthSendEmailConfirmationBodyEmailRegExp =
@@ -210,7 +841,7 @@ export const usersPermissionsPostAuthSendEmailConfirmationBody = zod.object({
 
 export const usersPermissionsPostAuthSendEmailConfirmationResponse = zod.object(
   {
-    email: zod.string(),
+    email: zod.email(),
     sent: zod.boolean(),
   },
 );
@@ -221,34 +852,155 @@ export const usersPermissionsPostAuthChangePasswordBody = zod.object({
   passwordConfirmation: zod.string(),
 });
 
+export const usersPermissionsPostAuthChangePasswordResponseUserDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthChangePasswordResponseUserEmailRegExp =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsPostAuthChangePasswordResponseUserConfirmedDefault = false;
+export const usersPermissionsPostAuthChangePasswordResponseUserBlockedDefault = false;
+export const usersPermissionsPostAuthChangePasswordResponseUserIsPhoneVerifiedDefault = false;
+export const usersPermissionsPostAuthChangePasswordResponseUserRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthChangePasswordResponseUserRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthChangePasswordResponseUserPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostAuthChangePasswordResponseUserPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsPostAuthChangePasswordResponseUserPhoneNumversItemDumbNumberMax = 9007199254740991;
+
 export const usersPermissionsPostAuthChangePasswordResponse = zod.object({
   jwt: zod.string(),
   refreshToken: zod.string().optional(),
-  user: zod.object({
-    id: zod.number(),
-    documentId: zod.string(),
-    username: zod.string(),
-    email: zod.string(),
-    provider: zod.string(),
-    confirmed: zod.boolean(),
-    blocked: zod.boolean(),
-    role: zod
-      .union([
-        zod.number(),
-        zod.object({
-          id: zod.number(),
-          name: zod.string(),
-          description: zod.union([zod.string(), zod.null()]),
-          type: zod.string(),
-          createdAt: zod.string(),
-          updatedAt: zod.string(),
-        }),
-      ])
-      .optional(),
-    createdAt: zod.string(),
-    updatedAt: zod.string(),
-    publishedAt: zod.string(),
-  }),
+  user: zod
+    .object({
+      documentId: zod
+        .uuid()
+        .regex(
+          usersPermissionsPostAuthChangePasswordResponseUserDocumentIdRegExp,
+        )
+        .describe("Unique document identifier (UUID v4)"),
+      id: zod.union([zod.string(), zod.number()]),
+      username: zod
+        .string()
+        .describe("User's unique username for authentication"),
+      email: zod
+        .email()
+        .regex(usersPermissionsPostAuthChangePasswordResponseUserEmailRegExp)
+        .describe("User's email address (unique, validated)"),
+      provider: zod.string().optional().describe("A string field"),
+      confirmed: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether email has been confirmed"),
+      blocked: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether user is blocked from accessing the system"),
+      isPhoneVerified: zod
+        .union([zod.boolean(), zod.null()])
+        .describe("Whether phone number has been verified"),
+      createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+      role: zod
+        .object({
+          documentId: zod
+            .uuid()
+            .regex(
+              usersPermissionsPostAuthChangePasswordResponseUserRoleDocumentIdRegExp,
+            )
+            .describe("The document ID, represented by a UUID"),
+          id: zod.union([zod.string(), zod.number()]),
+          name: zod.string().describe("A string field"),
+          description: zod.string().optional().describe("A string field"),
+          type: zod.string().optional().describe("A string field"),
+          createdAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          updatedAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+          permissions: zod
+            .array(
+              zod.object({
+                documentId: zod
+                  .uuid()
+                  .regex(
+                    usersPermissionsPostAuthChangePasswordResponseUserRolePermissionsItemDocumentIdRegExp,
+                  )
+                  .describe("The document ID, represented by a UUID"),
+                id: zod.union([zod.string(), zod.number()]),
+                action: zod.string().describe("A string field"),
+                createdAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                updatedAt: zod.iso
+                  .datetime({})
+                  .optional()
+                  .describe("A datetime field"),
+                publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+                role: zod.unknown().optional(),
+              }),
+            )
+            .optional()
+            .describe("A relational field"),
+          users: zod
+            .array(zod.unknown())
+            .optional()
+            .describe("A relational field"),
+        })
+        .optional(),
+      phone_numvers: zod
+        .array(
+          zod
+            .object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsPostAuthChangePasswordResponseUserPhoneNumversItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              dumb_number: zod
+                .number()
+                .min(
+                  usersPermissionsPostAuthChangePasswordResponseUserPhoneNumversItemDumbNumberMin,
+                )
+                .max(
+                  usersPermissionsPostAuthChangePasswordResponseUserPhoneNumversItemDumbNumberMax,
+                )
+                .optional()
+                .describe("An integer field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              user: zod.unknown().optional(),
+            })
+            .describe("Phone number entity"),
+        )
+        .optional()
+        .describe("A relational field"),
+    })
+    .describe("User document with authentication and profile information"),
 });
 
 export const usersPermissionsGetUsersCountQueryParams = zod.object({
@@ -257,6 +1009,9 @@ export const usersPermissionsGetUsersCountQueryParams = zod.object({
 
 export const usersPermissionsGetUsersCountResponse = zod.number();
 
+/**
+ * Get a list of users (requires appropriate permissions)
+ */
 export const usersPermissionsGetUsersQueryPaginationPageMax = 9007199254740991;
 
 export const usersPermissionsGetUsersQueryPaginationPageSizeMax = 9007199254740991;
@@ -324,34 +1079,166 @@ export const usersPermissionsGetUsersQueryParams = zod.object({
   filters: zod.record(zod.string(), zod.unknown()).optional(),
 });
 
-export const usersPermissionsGetUsersResponseItem = zod.object({
-  id: zod.number(),
-  documentId: zod.string(),
-  username: zod.string(),
-  email: zod.string(),
-  provider: zod.string(),
-  confirmed: zod.boolean(),
-  blocked: zod.boolean(),
-  role: zod
-    .union([
-      zod.number(),
-      zod.object({
-        id: zod.number(),
-        name: zod.string(),
-        description: zod.union([zod.string(), zod.null()]),
-        type: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      }),
-    ])
-    .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-  publishedAt: zod.string(),
-});
-export const usersPermissionsGetUsersResponse = zod.array(
-  usersPermissionsGetUsersResponseItem,
+export const usersPermissionsGetUsersResponseDataItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersResponseDataItemEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
 );
+export const usersPermissionsGetUsersResponseDataItemConfirmedDefault = false;
+export const usersPermissionsGetUsersResponseDataItemBlockedDefault = false;
+export const usersPermissionsGetUsersResponseDataItemIsPhoneVerifiedDefault = false;
+export const usersPermissionsGetUsersResponseDataItemRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersResponseDataItemRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersResponseDataItemPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersResponseDataItemPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsGetUsersResponseDataItemPhoneNumversItemDumbNumberMax = 9007199254740991;
+
+export const usersPermissionsGetUsersResponse = zod.object({
+  data: zod
+    .array(
+      zod
+        .object({
+          documentId: zod
+            .uuid()
+            .regex(usersPermissionsGetUsersResponseDataItemDocumentIdRegExp)
+            .describe("Unique document identifier (UUID v4)"),
+          id: zod.union([zod.string(), zod.number()]),
+          username: zod
+            .string()
+            .describe("User's unique username for authentication"),
+          email: zod
+            .email()
+            .regex(usersPermissionsGetUsersResponseDataItemEmailRegExp)
+            .describe("User's email address (unique, validated)"),
+          provider: zod.string().optional().describe("A string field"),
+          confirmed: zod
+            .union([zod.boolean(), zod.null()])
+            .describe("Whether email has been confirmed"),
+          blocked: zod
+            .union([zod.boolean(), zod.null()])
+            .describe("Whether user is blocked from accessing the system"),
+          isPhoneVerified: zod
+            .union([zod.boolean(), zod.null()])
+            .describe("Whether phone number has been verified"),
+          createdAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          updatedAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+          role: zod
+            .object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsGetUsersResponseDataItemRoleDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              name: zod.string().describe("A string field"),
+              description: zod.string().optional().describe("A string field"),
+              type: zod.string().optional().describe("A string field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              permissions: zod
+                .array(
+                  zod.object({
+                    documentId: zod
+                      .uuid()
+                      .regex(
+                        usersPermissionsGetUsersResponseDataItemRolePermissionsItemDocumentIdRegExp,
+                      )
+                      .describe("The document ID, represented by a UUID"),
+                    id: zod.union([zod.string(), zod.number()]),
+                    action: zod.string().describe("A string field"),
+                    createdAt: zod.iso
+                      .datetime({})
+                      .optional()
+                      .describe("A datetime field"),
+                    updatedAt: zod.iso
+                      .datetime({})
+                      .optional()
+                      .describe("A datetime field"),
+                    publishedAt: zod.iso
+                      .datetime({})
+                      .describe("A datetime field"),
+                    role: zod.unknown().optional(),
+                  }),
+                )
+                .optional()
+                .describe("A relational field"),
+              users: zod
+                .array(zod.unknown())
+                .optional()
+                .describe("A relational field"),
+            })
+            .optional(),
+          phone_numvers: zod
+            .array(
+              zod
+                .object({
+                  documentId: zod
+                    .uuid()
+                    .regex(
+                      usersPermissionsGetUsersResponseDataItemPhoneNumversItemDocumentIdRegExp,
+                    )
+                    .describe("The document ID, represented by a UUID"),
+                  id: zod.union([zod.string(), zod.number()]),
+                  dumb_number: zod
+                    .number()
+                    .min(
+                      usersPermissionsGetUsersResponseDataItemPhoneNumversItemDumbNumberMin,
+                    )
+                    .max(
+                      usersPermissionsGetUsersResponseDataItemPhoneNumversItemDumbNumberMax,
+                    )
+                    .optional()
+                    .describe("An integer field"),
+                  createdAt: zod.iso
+                    .datetime({})
+                    .optional()
+                    .describe("A datetime field"),
+                  updatedAt: zod.iso
+                    .datetime({})
+                    .optional()
+                    .describe("A datetime field"),
+                  publishedAt: zod.iso
+                    .datetime({})
+                    .describe("A datetime field"),
+                  user: zod.unknown().optional(),
+                })
+                .describe("Phone number entity"),
+            )
+            .optional()
+            .describe("A relational field"),
+        })
+        .describe("User document with authentication and profile information"),
+    )
+    .optional(),
+  meta: zod.object({}).optional(),
+});
 
 export const usersPermissionsPostUsersBodyEmailRegExp = new RegExp(
   "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
@@ -364,32 +1251,143 @@ export const usersPermissionsPostUsersBody = zod.object({
   role: zod.number().optional(),
 });
 
-export const usersPermissionsPostUsersResponse = zod.object({
-  id: zod.number(),
-  documentId: zod.string(),
-  username: zod.string(),
-  email: zod.string(),
-  provider: zod.string(),
-  confirmed: zod.boolean(),
-  blocked: zod.boolean(),
-  role: zod
-    .union([
-      zod.number(),
-      zod.object({
-        id: zod.number(),
-        name: zod.string(),
-        description: zod.union([zod.string(), zod.null()]),
-        type: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      }),
-    ])
-    .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-  publishedAt: zod.string(),
-});
+export const usersPermissionsPostUsersResponseDocumentIdRegExp = new RegExp(
+  "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+);
+export const usersPermissionsPostUsersResponseEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+);
+export const usersPermissionsPostUsersResponseConfirmedDefault = false;
+export const usersPermissionsPostUsersResponseBlockedDefault = false;
+export const usersPermissionsPostUsersResponseIsPhoneVerifiedDefault = false;
+export const usersPermissionsPostUsersResponseRoleDocumentIdRegExp = new RegExp(
+  "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+);
+export const usersPermissionsPostUsersResponseRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostUsersResponsePhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPostUsersResponsePhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsPostUsersResponsePhoneNumversItemDumbNumberMax = 9007199254740991;
 
+export const usersPermissionsPostUsersResponse = zod
+  .object({
+    documentId: zod
+      .uuid()
+      .regex(usersPermissionsPostUsersResponseDocumentIdRegExp)
+      .describe("Unique document identifier (UUID v4)"),
+    id: zod.union([zod.string(), zod.number()]),
+    username: zod
+      .string()
+      .describe("User's unique username for authentication"),
+    email: zod
+      .email()
+      .regex(usersPermissionsPostUsersResponseEmailRegExp)
+      .describe("User's email address (unique, validated)"),
+    provider: zod.string().optional().describe("A string field"),
+    confirmed: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether email has been confirmed"),
+    blocked: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether user is blocked from accessing the system"),
+    isPhoneVerified: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether phone number has been verified"),
+    createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+    role: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(usersPermissionsPostUsersResponseRoleDocumentIdRegExp)
+          .describe("The document ID, represented by a UUID"),
+        id: zod.union([zod.string(), zod.number()]),
+        name: zod.string().describe("A string field"),
+        description: zod.string().optional().describe("A string field"),
+        type: zod.string().optional().describe("A string field"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        permissions: zod
+          .array(
+            zod.object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsPostUsersResponseRolePermissionsItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              action: zod.string().describe("A string field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              role: zod.unknown().optional(),
+            }),
+          )
+          .optional()
+          .describe("A relational field"),
+        users: zod
+          .array(zod.unknown())
+          .optional()
+          .describe("A relational field"),
+      })
+      .optional(),
+    phone_numvers: zod
+      .array(
+        zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsPostUsersResponsePhoneNumversItemDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            dumb_number: zod
+              .number()
+              .min(
+                usersPermissionsPostUsersResponsePhoneNumversItemDumbNumberMin,
+              )
+              .max(
+                usersPermissionsPostUsersResponsePhoneNumversItemDumbNumberMax,
+              )
+              .optional()
+              .describe("An integer field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            user: zod.unknown().optional(),
+          })
+          .describe("Phone number entity"),
+      )
+      .optional()
+      .describe("A relational field"),
+  })
+  .describe("User document with authentication and profile information");
+
+/**
+ * Get the authenticated user profile
+ */
 export const usersPermissionsGetUsersMeQueryParams = zod.object({
   fields: zod.union([zod.string(), zod.array(zod.string())]).optional(),
   populate: zod
@@ -402,32 +1400,144 @@ export const usersPermissionsGetUsersMeQueryParams = zod.object({
     .optional(),
 });
 
-export const usersPermissionsGetUsersMeResponse = zod.object({
-  id: zod.number(),
-  documentId: zod.string(),
-  username: zod.string(),
-  email: zod.string(),
-  provider: zod.string(),
-  confirmed: zod.boolean(),
-  blocked: zod.boolean(),
-  role: zod
-    .union([
-      zod.number(),
-      zod.object({
-        id: zod.number(),
-        name: zod.string(),
-        description: zod.union([zod.string(), zod.null()]),
-        type: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      }),
-    ])
-    .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-  publishedAt: zod.string(),
-});
+export const usersPermissionsGetUsersMeResponseDocumentIdRegExp = new RegExp(
+  "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+);
+export const usersPermissionsGetUsersMeResponseEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+);
+export const usersPermissionsGetUsersMeResponseConfirmedDefault = false;
+export const usersPermissionsGetUsersMeResponseBlockedDefault = false;
+export const usersPermissionsGetUsersMeResponseIsPhoneVerifiedDefault = false;
+export const usersPermissionsGetUsersMeResponseRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersMeResponseRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersMeResponsePhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersMeResponsePhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsGetUsersMeResponsePhoneNumversItemDumbNumberMax = 9007199254740991;
 
+export const usersPermissionsGetUsersMeResponse = zod
+  .object({
+    documentId: zod
+      .uuid()
+      .regex(usersPermissionsGetUsersMeResponseDocumentIdRegExp)
+      .describe("Unique document identifier (UUID v4)"),
+    id: zod.union([zod.string(), zod.number()]),
+    username: zod
+      .string()
+      .describe("User's unique username for authentication"),
+    email: zod
+      .email()
+      .regex(usersPermissionsGetUsersMeResponseEmailRegExp)
+      .describe("User's email address (unique, validated)"),
+    provider: zod.string().optional().describe("A string field"),
+    confirmed: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether email has been confirmed"),
+    blocked: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether user is blocked from accessing the system"),
+    isPhoneVerified: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether phone number has been verified"),
+    createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+    role: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(usersPermissionsGetUsersMeResponseRoleDocumentIdRegExp)
+          .describe("The document ID, represented by a UUID"),
+        id: zod.union([zod.string(), zod.number()]),
+        name: zod.string().describe("A string field"),
+        description: zod.string().optional().describe("A string field"),
+        type: zod.string().optional().describe("A string field"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        permissions: zod
+          .array(
+            zod.object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsGetUsersMeResponseRolePermissionsItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              action: zod.string().describe("A string field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              role: zod.unknown().optional(),
+            }),
+          )
+          .optional()
+          .describe("A relational field"),
+        users: zod
+          .array(zod.unknown())
+          .optional()
+          .describe("A relational field"),
+      })
+      .optional(),
+    phone_numvers: zod
+      .array(
+        zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsGetUsersMeResponsePhoneNumversItemDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            dumb_number: zod
+              .number()
+              .min(
+                usersPermissionsGetUsersMeResponsePhoneNumversItemDumbNumberMin,
+              )
+              .max(
+                usersPermissionsGetUsersMeResponsePhoneNumversItemDumbNumberMax,
+              )
+              .optional()
+              .describe("An integer field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            user: zod.unknown().optional(),
+          })
+          .describe("Phone number entity"),
+      )
+      .optional()
+      .describe("A relational field"),
+  })
+  .describe("User document with authentication and profile information");
+
+/**
+ * Get a specific user by ID
+ */
 export const usersPermissionsGetUsersByIdParams = zod.object({
   id: zod.string(),
 });
@@ -444,31 +1554,140 @@ export const usersPermissionsGetUsersByIdQueryParams = zod.object({
     .optional(),
 });
 
-export const usersPermissionsGetUsersByIdResponse = zod.object({
-  id: zod.number(),
-  documentId: zod.string(),
-  username: zod.string(),
-  email: zod.string(),
-  provider: zod.string(),
-  confirmed: zod.boolean(),
-  blocked: zod.boolean(),
-  role: zod
-    .union([
-      zod.number(),
-      zod.object({
-        id: zod.number(),
-        name: zod.string(),
-        description: zod.union([zod.string(), zod.null()]),
-        type: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      }),
-    ])
-    .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-  publishedAt: zod.string(),
-});
+export const usersPermissionsGetUsersByIdResponseDocumentIdRegExp = new RegExp(
+  "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+);
+export const usersPermissionsGetUsersByIdResponseEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+);
+export const usersPermissionsGetUsersByIdResponseConfirmedDefault = false;
+export const usersPermissionsGetUsersByIdResponseBlockedDefault = false;
+export const usersPermissionsGetUsersByIdResponseIsPhoneVerifiedDefault = false;
+export const usersPermissionsGetUsersByIdResponseRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersByIdResponseRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersByIdResponsePhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetUsersByIdResponsePhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsGetUsersByIdResponsePhoneNumversItemDumbNumberMax = 9007199254740991;
+
+export const usersPermissionsGetUsersByIdResponse = zod
+  .object({
+    documentId: zod
+      .uuid()
+      .regex(usersPermissionsGetUsersByIdResponseDocumentIdRegExp)
+      .describe("Unique document identifier (UUID v4)"),
+    id: zod.union([zod.string(), zod.number()]),
+    username: zod
+      .string()
+      .describe("User's unique username for authentication"),
+    email: zod
+      .email()
+      .regex(usersPermissionsGetUsersByIdResponseEmailRegExp)
+      .describe("User's email address (unique, validated)"),
+    provider: zod.string().optional().describe("A string field"),
+    confirmed: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether email has been confirmed"),
+    blocked: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether user is blocked from accessing the system"),
+    isPhoneVerified: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether phone number has been verified"),
+    createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+    role: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(usersPermissionsGetUsersByIdResponseRoleDocumentIdRegExp)
+          .describe("The document ID, represented by a UUID"),
+        id: zod.union([zod.string(), zod.number()]),
+        name: zod.string().describe("A string field"),
+        description: zod.string().optional().describe("A string field"),
+        type: zod.string().optional().describe("A string field"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        permissions: zod
+          .array(
+            zod.object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsGetUsersByIdResponseRolePermissionsItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              action: zod.string().describe("A string field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              role: zod.unknown().optional(),
+            }),
+          )
+          .optional()
+          .describe("A relational field"),
+        users: zod
+          .array(zod.unknown())
+          .optional()
+          .describe("A relational field"),
+      })
+      .optional(),
+    phone_numvers: zod
+      .array(
+        zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsGetUsersByIdResponsePhoneNumversItemDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            dumb_number: zod
+              .number()
+              .min(
+                usersPermissionsGetUsersByIdResponsePhoneNumversItemDumbNumberMin,
+              )
+              .max(
+                usersPermissionsGetUsersByIdResponsePhoneNumversItemDumbNumberMax,
+              )
+              .optional()
+              .describe("An integer field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            user: zod.unknown().optional(),
+          })
+          .describe("Phone number entity"),
+      )
+      .optional()
+      .describe("A relational field"),
+  })
+  .describe("User document with authentication and profile information");
 
 export const usersPermissionsPutUsersByIdParams = zod.object({
   id: zod.string(),
@@ -488,128 +1707,589 @@ export const usersPermissionsPutUsersByIdBody = zod.object({
   role: zod.number().optional(),
 });
 
-export const usersPermissionsPutUsersByIdResponse = zod.object({
-  id: zod.number(),
-  documentId: zod.string(),
-  username: zod.string(),
-  email: zod.string(),
-  provider: zod.string(),
-  confirmed: zod.boolean(),
-  blocked: zod.boolean(),
-  role: zod
-    .union([
-      zod.number(),
-      zod.object({
-        id: zod.number(),
-        name: zod.string(),
-        description: zod.union([zod.string(), zod.null()]),
-        type: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      }),
-    ])
-    .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-  publishedAt: zod.string(),
-});
+export const usersPermissionsPutUsersByIdResponseDocumentIdRegExp = new RegExp(
+  "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+);
+export const usersPermissionsPutUsersByIdResponseEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+);
+export const usersPermissionsPutUsersByIdResponseConfirmedDefault = false;
+export const usersPermissionsPutUsersByIdResponseBlockedDefault = false;
+export const usersPermissionsPutUsersByIdResponseIsPhoneVerifiedDefault = false;
+export const usersPermissionsPutUsersByIdResponseRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPutUsersByIdResponseRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPutUsersByIdResponsePhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsPutUsersByIdResponsePhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsPutUsersByIdResponsePhoneNumversItemDumbNumberMax = 9007199254740991;
+
+export const usersPermissionsPutUsersByIdResponse = zod
+  .object({
+    documentId: zod
+      .uuid()
+      .regex(usersPermissionsPutUsersByIdResponseDocumentIdRegExp)
+      .describe("Unique document identifier (UUID v4)"),
+    id: zod.union([zod.string(), zod.number()]),
+    username: zod
+      .string()
+      .describe("User's unique username for authentication"),
+    email: zod
+      .email()
+      .regex(usersPermissionsPutUsersByIdResponseEmailRegExp)
+      .describe("User's email address (unique, validated)"),
+    provider: zod.string().optional().describe("A string field"),
+    confirmed: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether email has been confirmed"),
+    blocked: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether user is blocked from accessing the system"),
+    isPhoneVerified: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether phone number has been verified"),
+    createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+    role: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(usersPermissionsPutUsersByIdResponseRoleDocumentIdRegExp)
+          .describe("The document ID, represented by a UUID"),
+        id: zod.union([zod.string(), zod.number()]),
+        name: zod.string().describe("A string field"),
+        description: zod.string().optional().describe("A string field"),
+        type: zod.string().optional().describe("A string field"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        permissions: zod
+          .array(
+            zod.object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsPutUsersByIdResponseRolePermissionsItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              action: zod.string().describe("A string field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              role: zod.unknown().optional(),
+            }),
+          )
+          .optional()
+          .describe("A relational field"),
+        users: zod
+          .array(zod.unknown())
+          .optional()
+          .describe("A relational field"),
+      })
+      .optional(),
+    phone_numvers: zod
+      .array(
+        zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsPutUsersByIdResponsePhoneNumversItemDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            dumb_number: zod
+              .number()
+              .min(
+                usersPermissionsPutUsersByIdResponsePhoneNumversItemDumbNumberMin,
+              )
+              .max(
+                usersPermissionsPutUsersByIdResponsePhoneNumversItemDumbNumberMax,
+              )
+              .optional()
+              .describe("An integer field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            user: zod.unknown().optional(),
+          })
+          .describe("Phone number entity"),
+      )
+      .optional()
+      .describe("A relational field"),
+  })
+  .describe("User document with authentication and profile information");
 
 export const usersPermissionsDeleteUsersByIdParams = zod.object({
   id: zod.string(),
 });
 
-export const usersPermissionsDeleteUsersByIdResponse = zod.object({
-  id: zod.number(),
-  documentId: zod.string(),
-  username: zod.string(),
-  email: zod.string(),
-  provider: zod.string(),
-  confirmed: zod.boolean(),
-  blocked: zod.boolean(),
-  role: zod
-    .union([
-      zod.number(),
-      zod.object({
-        id: zod.number(),
-        name: zod.string(),
-        description: zod.union([zod.string(), zod.null()]),
-        type: zod.string(),
-        createdAt: zod.string(),
-        updatedAt: zod.string(),
-      }),
-    ])
-    .optional(),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
-  publishedAt: zod.string(),
-});
+export const usersPermissionsDeleteUsersByIdResponseDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsDeleteUsersByIdResponseEmailRegExp = new RegExp(
+  "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+);
+export const usersPermissionsDeleteUsersByIdResponseConfirmedDefault = false;
+export const usersPermissionsDeleteUsersByIdResponseBlockedDefault = false;
+export const usersPermissionsDeleteUsersByIdResponseIsPhoneVerifiedDefault = false;
+export const usersPermissionsDeleteUsersByIdResponseRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsDeleteUsersByIdResponseRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsDeleteUsersByIdResponsePhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsDeleteUsersByIdResponsePhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsDeleteUsersByIdResponsePhoneNumversItemDumbNumberMax = 9007199254740991;
+
+export const usersPermissionsDeleteUsersByIdResponse = zod
+  .object({
+    documentId: zod
+      .uuid()
+      .regex(usersPermissionsDeleteUsersByIdResponseDocumentIdRegExp)
+      .describe("Unique document identifier (UUID v4)"),
+    id: zod.union([zod.string(), zod.number()]),
+    username: zod
+      .string()
+      .describe("User's unique username for authentication"),
+    email: zod
+      .email()
+      .regex(usersPermissionsDeleteUsersByIdResponseEmailRegExp)
+      .describe("User's email address (unique, validated)"),
+    provider: zod.string().optional().describe("A string field"),
+    confirmed: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether email has been confirmed"),
+    blocked: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether user is blocked from accessing the system"),
+    isPhoneVerified: zod
+      .union([zod.boolean(), zod.null()])
+      .describe("Whether phone number has been verified"),
+    createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+    role: zod
+      .object({
+        documentId: zod
+          .uuid()
+          .regex(usersPermissionsDeleteUsersByIdResponseRoleDocumentIdRegExp)
+          .describe("The document ID, represented by a UUID"),
+        id: zod.union([zod.string(), zod.number()]),
+        name: zod.string().describe("A string field"),
+        description: zod.string().optional().describe("A string field"),
+        type: zod.string().optional().describe("A string field"),
+        createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+        publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+        permissions: zod
+          .array(
+            zod.object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsDeleteUsersByIdResponseRolePermissionsItemDocumentIdRegExp,
+                )
+                .describe("The document ID, represented by a UUID"),
+              id: zod.union([zod.string(), zod.number()]),
+              action: zod.string().describe("A string field"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              role: zod.unknown().optional(),
+            }),
+          )
+          .optional()
+          .describe("A relational field"),
+        users: zod
+          .array(zod.unknown())
+          .optional()
+          .describe("A relational field"),
+      })
+      .optional(),
+    phone_numvers: zod
+      .array(
+        zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsDeleteUsersByIdResponsePhoneNumversItemDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            dumb_number: zod
+              .number()
+              .min(
+                usersPermissionsDeleteUsersByIdResponsePhoneNumversItemDumbNumberMin,
+              )
+              .max(
+                usersPermissionsDeleteUsersByIdResponsePhoneNumversItemDumbNumberMax,
+              )
+              .optional()
+              .describe("An integer field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            user: zod.unknown().optional(),
+          })
+          .describe("Phone number entity"),
+      )
+      .optional()
+      .describe("A relational field"),
+  })
+  .describe("User document with authentication and profile information");
 
 export const usersPermissionsGetRolesByIdParams = zod.object({
   id: zod.string(),
 });
 
+export const usersPermissionsGetRolesByIdResponseRoleDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesByIdResponseRolePermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemEmailRegExp =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemConfirmedDefault = false;
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemBlockedDefault = false;
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemIsPhoneVerifiedDefault = false;
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsGetRolesByIdResponseRoleUsersItemPhoneNumversItemDumbNumberMax = 9007199254740991;
+
 export const usersPermissionsGetRolesByIdResponse = zod.object({
   role: zod.object({
-    id: zod.number(),
-    documentId: zod.string(),
-    name: zod.string(),
-    description: zod.union([zod.string(), zod.null()]),
-    type: zod.string(),
-    createdAt: zod.string(),
-    updatedAt: zod.string(),
-    publishedAt: zod.string(),
-    nb_users: zod.number().optional(),
+    documentId: zod
+      .uuid()
+      .regex(usersPermissionsGetRolesByIdResponseRoleDocumentIdRegExp)
+      .describe("The document ID, represented by a UUID"),
+    id: zod.union([zod.string(), zod.number()]),
+    name: zod.string().describe("A string field"),
+    description: zod.string().optional().describe("A string field"),
+    type: zod.string().optional().describe("A string field"),
+    createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+    publishedAt: zod.iso.datetime({}).describe("A datetime field"),
     permissions: zod
-      .record(
-        zod.string(),
+      .array(
         zod.object({
-          controllers: zod.record(
-            zod.string(),
-            zod.record(
-              zod.string(),
-              zod.object({
-                enabled: zod.boolean(),
-                policy: zod.string(),
-              }),
-            ),
-          ),
+          documentId: zod
+            .uuid()
+            .regex(
+              usersPermissionsGetRolesByIdResponseRolePermissionsItemDocumentIdRegExp,
+            )
+            .describe("The document ID, represented by a UUID"),
+          id: zod.union([zod.string(), zod.number()]),
+          action: zod.string().describe("A string field"),
+          createdAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          updatedAt: zod.iso
+            .datetime({})
+            .optional()
+            .describe("A datetime field"),
+          publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+          role: zod.unknown().optional(),
         }),
       )
-      .optional(),
-    users: zod.array(zod.unknown()).optional(),
+      .optional()
+      .describe("A relational field"),
+    users: zod
+      .array(
+        zod
+          .object({
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsGetRolesByIdResponseRoleUsersItemDocumentIdRegExp,
+              )
+              .describe("Unique document identifier (UUID v4)"),
+            id: zod.union([zod.string(), zod.number()]),
+            username: zod
+              .string()
+              .describe("User's unique username for authentication"),
+            email: zod
+              .email()
+              .regex(
+                usersPermissionsGetRolesByIdResponseRoleUsersItemEmailRegExp,
+              )
+              .describe("User's email address (unique, validated)"),
+            provider: zod.string().optional().describe("A string field"),
+            confirmed: zod
+              .union([zod.boolean(), zod.null()])
+              .describe("Whether email has been confirmed"),
+            blocked: zod
+              .union([zod.boolean(), zod.null()])
+              .describe("Whether user is blocked from accessing the system"),
+            isPhoneVerified: zod
+              .union([zod.boolean(), zod.null()])
+              .describe("Whether phone number has been verified"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            role: zod.unknown().optional(),
+            phone_numvers: zod
+              .array(
+                zod
+                  .object({
+                    documentId: zod
+                      .uuid()
+                      .regex(
+                        usersPermissionsGetRolesByIdResponseRoleUsersItemPhoneNumversItemDocumentIdRegExp,
+                      )
+                      .describe("The document ID, represented by a UUID"),
+                    id: zod.union([zod.string(), zod.number()]),
+                    dumb_number: zod
+                      .number()
+                      .min(
+                        usersPermissionsGetRolesByIdResponseRoleUsersItemPhoneNumversItemDumbNumberMin,
+                      )
+                      .max(
+                        usersPermissionsGetRolesByIdResponseRoleUsersItemPhoneNumversItemDumbNumberMax,
+                      )
+                      .optional()
+                      .describe("An integer field"),
+                    createdAt: zod.iso
+                      .datetime({})
+                      .optional()
+                      .describe("A datetime field"),
+                    updatedAt: zod.iso
+                      .datetime({})
+                      .optional()
+                      .describe("A datetime field"),
+                    publishedAt: zod.iso
+                      .datetime({})
+                      .describe("A datetime field"),
+                    user: zod.unknown().optional(),
+                  })
+                  .describe("Phone number entity"),
+              )
+              .optional()
+              .describe("A relational field"),
+          })
+          .describe(
+            "User document with authentication and profile information",
+          ),
+      )
+      .optional()
+      .describe("A relational field"),
   }),
 });
+
+export const usersPermissionsGetRolesResponseRolesItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesResponseRolesItemPermissionsItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesResponseRolesItemUsersItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesResponseRolesItemUsersItemEmailRegExp =
+  new RegExp(
+    "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+  );
+export const usersPermissionsGetRolesResponseRolesItemUsersItemConfirmedDefault = false;
+export const usersPermissionsGetRolesResponseRolesItemUsersItemBlockedDefault = false;
+export const usersPermissionsGetRolesResponseRolesItemUsersItemIsPhoneVerifiedDefault = false;
+export const usersPermissionsGetRolesResponseRolesItemUsersItemPhoneNumversItemDocumentIdRegExp =
+  new RegExp(
+    "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+  );
+export const usersPermissionsGetRolesResponseRolesItemUsersItemPhoneNumversItemDumbNumberMin =
+  -9007199254740991;
+export const usersPermissionsGetRolesResponseRolesItemUsersItemPhoneNumversItemDumbNumberMax = 9007199254740991;
 
 export const usersPermissionsGetRolesResponse = zod.object({
   roles: zod.array(
     zod.object({
-      id: zod.number(),
-      documentId: zod.string(),
-      name: zod.string(),
-      description: zod.union([zod.string(), zod.null()]),
-      type: zod.string(),
-      createdAt: zod.string(),
-      updatedAt: zod.string(),
-      publishedAt: zod.string(),
-      nb_users: zod.number().optional(),
+      documentId: zod
+        .uuid()
+        .regex(usersPermissionsGetRolesResponseRolesItemDocumentIdRegExp)
+        .describe("The document ID, represented by a UUID"),
+      id: zod.union([zod.string(), zod.number()]),
+      name: zod.string().describe("A string field"),
+      description: zod.string().optional().describe("A string field"),
+      type: zod.string().optional().describe("A string field"),
+      createdAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      updatedAt: zod.iso.datetime({}).optional().describe("A datetime field"),
+      publishedAt: zod.iso.datetime({}).describe("A datetime field"),
       permissions: zod
-        .record(
-          zod.string(),
+        .array(
           zod.object({
-            controllers: zod.record(
-              zod.string(),
-              zod.record(
-                zod.string(),
-                zod.object({
-                  enabled: zod.boolean(),
-                  policy: zod.string(),
-                }),
-              ),
-            ),
+            documentId: zod
+              .uuid()
+              .regex(
+                usersPermissionsGetRolesResponseRolesItemPermissionsItemDocumentIdRegExp,
+              )
+              .describe("The document ID, represented by a UUID"),
+            id: zod.union([zod.string(), zod.number()]),
+            action: zod.string().describe("A string field"),
+            createdAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            updatedAt: zod.iso
+              .datetime({})
+              .optional()
+              .describe("A datetime field"),
+            publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+            role: zod.unknown().optional(),
           }),
         )
-        .optional(),
-      users: zod.array(zod.unknown()).optional(),
+        .optional()
+        .describe("A relational field"),
+      users: zod
+        .array(
+          zod
+            .object({
+              documentId: zod
+                .uuid()
+                .regex(
+                  usersPermissionsGetRolesResponseRolesItemUsersItemDocumentIdRegExp,
+                )
+                .describe("Unique document identifier (UUID v4)"),
+              id: zod.union([zod.string(), zod.number()]),
+              username: zod
+                .string()
+                .describe("User's unique username for authentication"),
+              email: zod
+                .email()
+                .regex(
+                  usersPermissionsGetRolesResponseRolesItemUsersItemEmailRegExp,
+                )
+                .describe("User's email address (unique, validated)"),
+              provider: zod.string().optional().describe("A string field"),
+              confirmed: zod
+                .union([zod.boolean(), zod.null()])
+                .describe("Whether email has been confirmed"),
+              blocked: zod
+                .union([zod.boolean(), zod.null()])
+                .describe("Whether user is blocked from accessing the system"),
+              isPhoneVerified: zod
+                .union([zod.boolean(), zod.null()])
+                .describe("Whether phone number has been verified"),
+              createdAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              updatedAt: zod.iso
+                .datetime({})
+                .optional()
+                .describe("A datetime field"),
+              publishedAt: zod.iso.datetime({}).describe("A datetime field"),
+              role: zod.unknown().optional(),
+              phone_numvers: zod
+                .array(
+                  zod
+                    .object({
+                      documentId: zod
+                        .uuid()
+                        .regex(
+                          usersPermissionsGetRolesResponseRolesItemUsersItemPhoneNumversItemDocumentIdRegExp,
+                        )
+                        .describe("The document ID, represented by a UUID"),
+                      id: zod.union([zod.string(), zod.number()]),
+                      dumb_number: zod
+                        .number()
+                        .min(
+                          usersPermissionsGetRolesResponseRolesItemUsersItemPhoneNumversItemDumbNumberMin,
+                        )
+                        .max(
+                          usersPermissionsGetRolesResponseRolesItemUsersItemPhoneNumversItemDumbNumberMax,
+                        )
+                        .optional()
+                        .describe("An integer field"),
+                      createdAt: zod.iso
+                        .datetime({})
+                        .optional()
+                        .describe("A datetime field"),
+                      updatedAt: zod.iso
+                        .datetime({})
+                        .optional()
+                        .describe("A datetime field"),
+                      publishedAt: zod.iso
+                        .datetime({})
+                        .describe("A datetime field"),
+                      user: zod.unknown().optional(),
+                    })
+                    .describe("Phone number entity"),
+                )
+                .optional()
+                .describe("A relational field"),
+            })
+            .describe(
+              "User document with authentication and profile information",
+            ),
+        )
+        .optional()
+        .describe("A relational field"),
     }),
   ),
 });

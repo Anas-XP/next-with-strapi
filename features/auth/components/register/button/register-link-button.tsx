@@ -1,6 +1,6 @@
 import { UserPlus } from "lucide-react";
-import { LinkEnhanced } from "./enhanced/link.enhanced";
-import { buttonVariants } from "./ui/button";
+import { LinkEnhanced } from "../../../../../components/enhanced/link.enhanced";
+import { buttonVariants } from "../../../../../components/ui/button";
 import { REGISTER_URL } from "@/features/auth/utils";
 
 export const RegisterLinkButton = ({

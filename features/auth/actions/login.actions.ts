@@ -1,15 +1,16 @@
 "use server";
 
 import { asyncHandler } from "@/lib/error-handling/async-handler.utils";
-import { userPermissionPluginAPI } from "../config";
-import { AFTER_LOGIN_REDIRECT_URL } from "../utils";
-import { TZodLoginFormSchema } from "../validations/auth-forms.zod";
-import { setLoginCookies } from "./auth-cookies.actions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { userPermissionPluginAPI } from "../config";
+import { AFTER_LOGIN_REDIRECT_URL } from "../utils";
+import { TEProvider, TZodLoginFormSchema } from "../validations/auth-forms.zod";
+import { setLoginCookies } from "./auth-cookies.actions";
 
 const loginWithStrapi = userPermissionPluginAPI.usersPermissionsPostAuthLocal;
-
+const loginWithProvider =
+  userPermissionPluginAPI.usersPermissionsGetAuthByProviderCallback;
 export const loginAction = asyncHandler(
   async ({
     email,
@@ -35,5 +36,24 @@ export const loginAction = asyncHandler(
 
     redirect(destination);
   },
-  true,
+);
+
+export const loginWithProviderAction = asyncHandler(
+  async ({
+    access_token,
+    provider,
+  }: {
+    access_token: string;
+    provider: TEProvider;
+  }) => {
+    const loginWithProviderResponse = await loginWithProvider(provider, {
+      access_token,
+    });
+
+    await setLoginCookies(loginWithProviderResponse.data);
+
+    revalidatePath("/", "layout");
+
+    redirect(AFTER_LOGIN_REDIRECT_URL);
+  },
 );

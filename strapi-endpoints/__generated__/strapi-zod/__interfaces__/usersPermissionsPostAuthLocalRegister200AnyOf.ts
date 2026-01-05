@@ -5,10 +5,10 @@
  * API documentation for learning-strapi-v-5 v0.1.0
  * OpenAPI spec version: 0.1.0
  */
-import type { UsersPermissionsPostAuthLocalRegister200AnyOfUser } from "./usersPermissionsPostAuthLocalRegister200AnyOfUser";
+import type { PluginUsersPermissionsUserDocument } from "./pluginUsersPermissionsUserDocument";
 
 export type UsersPermissionsPostAuthLocalRegister200AnyOf = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsPostAuthLocalRegister200AnyOfUser;
+  user: PluginUsersPermissionsUserDocument;
 };

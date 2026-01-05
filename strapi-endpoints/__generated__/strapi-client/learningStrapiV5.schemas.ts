@@ -5,6 +5,454 @@
  * API documentation for learning-strapi-v-5 v0.1.0
  * OpenAPI spec version: 0.1.0
  */
+export type PluginUsersPermissionsPermissionDocumentId = string | number;
+
+export interface PluginUsersPermissionsPermissionDocument {
+  /**
+   * The document ID, represented by a UUID
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
+   */
+  documentId: string;
+  id: PluginUsersPermissionsPermissionDocumentId;
+  /** A string field */
+  action: string;
+  /** A datetime field */
+  createdAt?: string;
+  /** A datetime field */
+  updatedAt?: string;
+  /** A datetime field */
+  publishedAt: string;
+  /** A relational field */
+  role?: PluginUsersPermissionsRoleDocument;
+}
+
+export type PluginUsersPermissionsRoleDocumentId = string | number;
+
+export interface PluginUsersPermissionsRoleDocument {
+  /**
+   * The document ID, represented by a UUID
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
+   */
+  documentId: string;
+  id: PluginUsersPermissionsRoleDocumentId;
+  /** A string field */
+  name: string;
+  /** A string field */
+  description?: string;
+  /** A string field */
+  type?: string;
+  /** A datetime field */
+  createdAt?: string;
+  /** A datetime field */
+  updatedAt?: string;
+  /** A datetime field */
+  publishedAt: string;
+  /** A relational field */
+  permissions?: PluginUsersPermissionsPermissionDocument[];
+  /** A relational field */
+  users?: PluginUsersPermissionsUserDocument[];
+}
+
+export type ApiPhoneNumverPhoneNumverDocumentId = string | number;
+
+/**
+ * Phone number entity
+ */
+export interface ApiPhoneNumverPhoneNumverDocument {
+  /**
+   * The document ID, represented by a UUID
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
+   */
+  documentId: string;
+  id: ApiPhoneNumverPhoneNumverDocumentId;
+  /**
+   * An integer field
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  dumb_number?: number;
+  /** A datetime field */
+  createdAt?: string;
+  /** A datetime field */
+  updatedAt?: string;
+  /** A datetime field */
+  publishedAt: string;
+  /** A relational field */
+  user?: PluginUsersPermissionsUserDocument;
+}
+
+export type PluginUsersPermissionsUserDocumentId = string | number;
+
+/**
+ * Whether email has been confirmed
+ */
+export type PluginUsersPermissionsUserDocumentConfirmed = boolean | null;
+
+/**
+ * Whether user is blocked from accessing the system
+ */
+export type PluginUsersPermissionsUserDocumentBlocked = boolean | null;
+
+/**
+ * Whether phone number has been verified
+ */
+export type PluginUsersPermissionsUserDocumentIsPhoneVerified = boolean | null;
+
+/**
+ * User document with authentication and profile information
+ */
+export interface PluginUsersPermissionsUserDocument {
+  /**
+   * Unique document identifier (UUID v4)
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
+   */
+  documentId: string;
+  id: PluginUsersPermissionsUserDocumentId;
+  /** User's unique username for authentication */
+  username: string;
+  /**
+   * User's email address (unique, validated)
+   * @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+   */
+  email: string;
+  /** A string field */
+  provider?: string;
+  /** Whether email has been confirmed */
+  confirmed: PluginUsersPermissionsUserDocumentConfirmed;
+  /** Whether user is blocked from accessing the system */
+  blocked: PluginUsersPermissionsUserDocumentBlocked;
+  /** Whether phone number has been verified */
+  isPhoneVerified: PluginUsersPermissionsUserDocumentIsPhoneVerified;
+  /** A datetime field */
+  createdAt?: string;
+  /** A datetime field */
+  updatedAt?: string;
+  /** A datetime field */
+  publishedAt: string;
+  /** A relational field */
+  role?: PluginUsersPermissionsRoleDocument;
+  /** A relational field */
+  phone_numvers?: ApiPhoneNumverPhoneNumverDocument[];
+}
+
+export type PhoneNumverGetPhoneNumversParams = {
+  /**
+   * The fields to return, this doesn't include populatable fields like relations, components, files, or dynamic zones
+   */
+  fields?: readonly PhoneNumverGetPhoneNumversFieldsItem[];
+  /**
+   * Filters to apply to the query
+   */
+  filters?: { [key: string]: unknown };
+  _q?: string;
+  /**
+   * Pagination parameters
+   */
+  pagination?: PhoneNumverGetPhoneNumversPaginationAllOf &
+    PhoneNumverGetPhoneNumversPaginationAllOfTwo;
+  /**
+   * Sort the result
+   */
+  sort?:
+    | "dumb_number"
+    | "createdAt"
+    | "updatedAt"
+    | "publishedAt"
+    | PhoneNumverGetPhoneNumversSortAnyOfItem[]
+    | PhoneNumverGetPhoneNumversSortAnyOfTwo
+    | PhoneNumverGetPhoneNumversSortAnyOfThreeItem[];
+  populate?: "*" | "user" | PhoneNumverGetPhoneNumversPopulateAnyOfItem[];
+};
+
+export type PhoneNumverGetPhoneNumversFieldsItem =
+  (typeof PhoneNumverGetPhoneNumversFieldsItem)[keyof typeof PhoneNumverGetPhoneNumversFieldsItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverGetPhoneNumversFieldsItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverGetPhoneNumversPaginationAllOf = {
+  /** Include total count in response */
+  withCount?: boolean;
+};
+
+/**
+ * Page-based pagination
+ */
+export type PhoneNumverGetPhoneNumversPaginationAllOfTwoAnyOf = {
+  /**
+   * Page number (1-based)
+   * @maximum 9007199254740991
+   */
+  page: number;
+  /**
+   * Number of entries per page
+   * @maximum 9007199254740991
+   */
+  pageSize: number;
+};
+
+/**
+ * Offset-based pagination
+ */
+export type PhoneNumverGetPhoneNumversPaginationAllOfTwoAnyOfTwo = {
+  /**
+   * Number of entries to skip
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  start: number;
+  /**
+   * Maximum number of entries to return
+   * @maximum 9007199254740991
+   */
+  limit: number;
+};
+
+export type PhoneNumverGetPhoneNumversPaginationAllOfTwo =
+  | PhoneNumverGetPhoneNumversPaginationAllOfTwoAnyOf
+  | PhoneNumverGetPhoneNumversPaginationAllOfTwoAnyOfTwo;
+
+export type PhoneNumverGetPhoneNumversSortAnyOfItem =
+  (typeof PhoneNumverGetPhoneNumversSortAnyOfItem)[keyof typeof PhoneNumverGetPhoneNumversSortAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverGetPhoneNumversSortAnyOfItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverGetPhoneNumversSortAnyOfTwo = {
+  [key: string]: "asc" | "desc";
+};
+
+export type PhoneNumverGetPhoneNumversSortAnyOfThreeItem = {
+  [key: string]: "asc" | "desc";
+};
+
+export type PhoneNumverGetPhoneNumversPopulateAnyOfItem =
+  (typeof PhoneNumverGetPhoneNumversPopulateAnyOfItem)[keyof typeof PhoneNumverGetPhoneNumversPopulateAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverGetPhoneNumversPopulateAnyOfItem = {
+  user: "user",
+} as const;
+
+export type PhoneNumverGetPhoneNumvers200 = {
+  data: ApiPhoneNumverPhoneNumverDocument[];
+};
+
+export type PhoneNumverPostPhoneNumversParams = {
+  /**
+   * The fields to return, this doesn't include populatable fields like relations, components, files, or dynamic zones
+   */
+  fields?: readonly PhoneNumverPostPhoneNumversFieldsItem[];
+  populate?: "*" | "user" | PhoneNumverPostPhoneNumversPopulateAnyOfItem[];
+};
+
+export type PhoneNumverPostPhoneNumversFieldsItem =
+  (typeof PhoneNumverPostPhoneNumversFieldsItem)[keyof typeof PhoneNumverPostPhoneNumversFieldsItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverPostPhoneNumversFieldsItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverPostPhoneNumversPopulateAnyOfItem =
+  (typeof PhoneNumverPostPhoneNumversPopulateAnyOfItem)[keyof typeof PhoneNumverPostPhoneNumversPopulateAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverPostPhoneNumversPopulateAnyOfItem = {
+  user: "user",
+} as const;
+
+export type PhoneNumverPostPhoneNumversBodyData = {
+  /**
+   * A float field
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  dumb_number?: number;
+  /** A datetime field */
+  publishedAt: string;
+  /**
+   * A relational field
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
+   */
+  user?: string;
+};
+
+export type PhoneNumverPostPhoneNumversBody = {
+  data: PhoneNumverPostPhoneNumversBodyData;
+};
+
+export type PhoneNumverPostPhoneNumvers200 = {
+  data: ApiPhoneNumverPhoneNumverDocument;
+};
+
+export type PhoneNumverGetPhoneNumversByIdParams = {
+  /**
+   * The fields to return, this doesn't include populatable fields like relations, components, files, or dynamic zones
+   */
+  fields?: readonly PhoneNumverGetPhoneNumversByIdFieldsItem[];
+  populate?: "*" | "user" | PhoneNumverGetPhoneNumversByIdPopulateAnyOfItem[];
+  /**
+   * Filters to apply to the query
+   */
+  filters?: { [key: string]: unknown };
+  /**
+   * Sort the result
+   */
+  sort?:
+    | "dumb_number"
+    | "createdAt"
+    | "updatedAt"
+    | "publishedAt"
+    | PhoneNumverGetPhoneNumversByIdSortAnyOfItem[]
+    | PhoneNumverGetPhoneNumversByIdSortAnyOfTwo
+    | PhoneNumverGetPhoneNumversByIdSortAnyOfThreeItem[];
+};
+
+export type PhoneNumverGetPhoneNumversByIdFieldsItem =
+  (typeof PhoneNumverGetPhoneNumversByIdFieldsItem)[keyof typeof PhoneNumverGetPhoneNumversByIdFieldsItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverGetPhoneNumversByIdFieldsItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverGetPhoneNumversByIdPopulateAnyOfItem =
+  (typeof PhoneNumverGetPhoneNumversByIdPopulateAnyOfItem)[keyof typeof PhoneNumverGetPhoneNumversByIdPopulateAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverGetPhoneNumversByIdPopulateAnyOfItem = {
+  user: "user",
+} as const;
+
+export type PhoneNumverGetPhoneNumversByIdSortAnyOfItem =
+  (typeof PhoneNumverGetPhoneNumversByIdSortAnyOfItem)[keyof typeof PhoneNumverGetPhoneNumversByIdSortAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverGetPhoneNumversByIdSortAnyOfItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverGetPhoneNumversByIdSortAnyOfTwo = {
+  [key: string]: "asc" | "desc";
+};
+
+export type PhoneNumverGetPhoneNumversByIdSortAnyOfThreeItem = {
+  [key: string]: "asc" | "desc";
+};
+
+export type PhoneNumverGetPhoneNumversById200 = {
+  data: ApiPhoneNumverPhoneNumverDocument;
+};
+
+export type PhoneNumverPutPhoneNumversByIdParams = {
+  /**
+   * The fields to return, this doesn't include populatable fields like relations, components, files, or dynamic zones
+   */
+  fields?: readonly PhoneNumverPutPhoneNumversByIdFieldsItem[];
+  populate?: "*" | "user" | PhoneNumverPutPhoneNumversByIdPopulateAnyOfItem[];
+};
+
+export type PhoneNumverPutPhoneNumversByIdFieldsItem =
+  (typeof PhoneNumverPutPhoneNumversByIdFieldsItem)[keyof typeof PhoneNumverPutPhoneNumversByIdFieldsItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverPutPhoneNumversByIdFieldsItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverPutPhoneNumversByIdPopulateAnyOfItem =
+  (typeof PhoneNumverPutPhoneNumversByIdPopulateAnyOfItem)[keyof typeof PhoneNumverPutPhoneNumversByIdPopulateAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverPutPhoneNumversByIdPopulateAnyOfItem = {
+  user: "user",
+} as const;
+
+export type PhoneNumverPutPhoneNumversByIdBodyData = {
+  /**
+   * A float field
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  dumb_number?: number;
+  /** A datetime field */
+  publishedAt?: string;
+  /**
+   * A relational field
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$
+   */
+  user?: string;
+};
+
+export type PhoneNumverPutPhoneNumversByIdBody = {
+  data: PhoneNumverPutPhoneNumversByIdBodyData;
+};
+
+export type PhoneNumverPutPhoneNumversById200 = {
+  data: ApiPhoneNumverPhoneNumverDocument;
+};
+
+export type PhoneNumverDeletePhoneNumversByIdParams = {
+  /**
+   * The fields to return, this doesn't include populatable fields like relations, components, files, or dynamic zones
+   */
+  fields?: readonly PhoneNumverDeletePhoneNumversByIdFieldsItem[];
+  populate?:
+    | "*"
+    | "user"
+    | PhoneNumverDeletePhoneNumversByIdPopulateAnyOfItem[];
+  /**
+   * Filters to apply to the query
+   */
+  filters?: { [key: string]: unknown };
+};
+
+export type PhoneNumverDeletePhoneNumversByIdFieldsItem =
+  (typeof PhoneNumverDeletePhoneNumversByIdFieldsItem)[keyof typeof PhoneNumverDeletePhoneNumversByIdFieldsItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverDeletePhoneNumversByIdFieldsItem = {
+  dumb_number: "dumb_number",
+  createdAt: "createdAt",
+  updatedAt: "updatedAt",
+  publishedAt: "publishedAt",
+} as const;
+
+export type PhoneNumverDeletePhoneNumversByIdPopulateAnyOfItem =
+  (typeof PhoneNumverDeletePhoneNumversByIdPopulateAnyOfItem)[keyof typeof PhoneNumverDeletePhoneNumversByIdPopulateAnyOfItem];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PhoneNumverDeletePhoneNumversByIdPopulateAnyOfItem = {
+  user: "user",
+} as const;
+
+export type PhoneNumverDeletePhoneNumversById200 = {
+  data: ApiPhoneNumverPhoneNumverDocument;
+};
+
 export type ContentTypeBuilderGetContentTypesParams = {
   kind: ContentTypeBuilderGetContentTypesKind;
 };
@@ -1009,41 +1457,10 @@ export type UsersPermissionsPostAuthLocalBody = {
   password: string;
 };
 
-export type UsersPermissionsPostAuthLocal200UserRoleAnyOfDescription =
-  | string
-  | null;
-
-export type UsersPermissionsPostAuthLocal200UserRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPostAuthLocal200UserRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPostAuthLocal200UserRole =
-  | number
-  | UsersPermissionsPostAuthLocal200UserRoleAnyOf;
-
-export type UsersPermissionsPostAuthLocal200User = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPostAuthLocal200UserRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
 export type UsersPermissionsPostAuthLocal200 = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsPostAuthLocal200User;
+  user: PluginUsersPermissionsUserDocument;
 };
 
 export type UsersPermissionsPostAuthLocalRegisterBody = {
@@ -1053,114 +1470,47 @@ export type UsersPermissionsPostAuthLocalRegisterBody = {
   password: string;
 };
 
-export type UsersPermissionsPostAuthLocalRegister200AnyOfUserRoleAnyOfDescription =
-  string | null;
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfUserRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPostAuthLocalRegister200AnyOfUserRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfUserRole =
-  | number
-  | UsersPermissionsPostAuthLocalRegister200AnyOfUserRoleAnyOf;
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfUser = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPostAuthLocalRegister200AnyOfUserRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
 export type UsersPermissionsPostAuthLocalRegister200AnyOf = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsPostAuthLocalRegister200AnyOfUser;
+  user: PluginUsersPermissionsUserDocument;
 };
 
-export type UsersPermissionsPostAuthLocalRegister200AnyOfSixUserRoleAnyOfDescription =
-  string | null;
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfSixUserRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPostAuthLocalRegister200AnyOfSixUserRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfSixUserRole =
-  | number
-  | UsersPermissionsPostAuthLocalRegister200AnyOfSixUserRoleAnyOf;
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfSixUser = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPostAuthLocalRegister200AnyOfSixUserRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
-export type UsersPermissionsPostAuthLocalRegister200AnyOfSix = {
-  user: UsersPermissionsPostAuthLocalRegister200AnyOfSixUser;
+export type UsersPermissionsPostAuthLocalRegister200AnyOfTwo = {
+  user: PluginUsersPermissionsUserDocument;
 };
 
 export type UsersPermissionsPostAuthLocalRegister200 =
   | UsersPermissionsPostAuthLocalRegister200AnyOf
-  | UsersPermissionsPostAuthLocalRegister200AnyOfSix;
+  | UsersPermissionsPostAuthLocalRegister200AnyOfTwo;
 
-export type UsersPermissionsGetAuthByProviderCallback200UserRoleAnyOfDescription =
-  string | null;
-
-export type UsersPermissionsGetAuthByProviderCallback200UserRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsGetAuthByProviderCallback200UserRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsGetAuthByProviderCallback200UserRole =
-  | number
-  | UsersPermissionsGetAuthByProviderCallback200UserRoleAnyOf;
-
-export type UsersPermissionsGetAuthByProviderCallback200User = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsGetAuthByProviderCallback200UserRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
+export type UsersPermissionsGetAuthByProviderCallbackParams = {
+  /**
+   * OAuth access token returned by provider
+   */
+  access_token?: string;
+  /**
+   * OAuth authorization code
+   */
+  code?: string;
+  /**
+   * OAuth state parameter for CSRF protection
+   */
+  state?: string;
+  /**
+   * OAuth error code if authentication failed
+   */
+  error?: string;
+  /**
+   * Human-readable error description
+   */
+  error_description?: string;
 };
 
 export type UsersPermissionsGetAuthByProviderCallback200 = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsGetAuthByProviderCallback200User;
+  user: PluginUsersPermissionsUserDocument;
 };
 
 export type UsersPermissionsPostAuthForgotPasswordBody = {
@@ -1178,41 +1528,10 @@ export type UsersPermissionsPostAuthResetPasswordBody = {
   passwordConfirmation: string;
 };
 
-export type UsersPermissionsPostAuthResetPassword200UserRoleAnyOfDescription =
-  | string
-  | null;
-
-export type UsersPermissionsPostAuthResetPassword200UserRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPostAuthResetPassword200UserRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPostAuthResetPassword200UserRole =
-  | number
-  | UsersPermissionsPostAuthResetPassword200UserRoleAnyOf;
-
-export type UsersPermissionsPostAuthResetPassword200User = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPostAuthResetPassword200UserRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
 export type UsersPermissionsPostAuthResetPassword200 = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsPostAuthResetPassword200User;
+  user: PluginUsersPermissionsUserDocument;
 };
 
 export type UsersPermissionsPostAuthSendEmailConfirmationBody = {
@@ -1231,41 +1550,10 @@ export type UsersPermissionsPostAuthChangePasswordBody = {
   passwordConfirmation: string;
 };
 
-export type UsersPermissionsPostAuthChangePassword200UserRoleAnyOfDescription =
-  | string
-  | null;
-
-export type UsersPermissionsPostAuthChangePassword200UserRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPostAuthChangePassword200UserRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPostAuthChangePassword200UserRole =
-  | number
-  | UsersPermissionsPostAuthChangePassword200UserRoleAnyOf;
-
-export type UsersPermissionsPostAuthChangePassword200User = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPostAuthChangePassword200UserRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
 export type UsersPermissionsPostAuthChangePassword200 = {
   jwt: string;
   refreshToken?: string;
-  user: UsersPermissionsPostAuthChangePassword200User;
+  user: PluginUsersPermissionsUserDocument;
 };
 
 export type UsersPermissionsGetUsersCountParams = {
@@ -1355,33 +1643,11 @@ export type UsersPermissionsGetUsersPaginationAllOfTwo =
   | UsersPermissionsGetUsersPaginationAllOfTwoAnyOf
   | UsersPermissionsGetUsersPaginationAllOfTwoAnyOfTwo;
 
-export type UsersPermissionsGetUsers200ItemRoleAnyOfDescription = string | null;
+export type UsersPermissionsGetUsers200Meta = { [key: string]: unknown };
 
-export type UsersPermissionsGetUsers200ItemRoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsGetUsers200ItemRoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsGetUsers200ItemRole =
-  | number
-  | UsersPermissionsGetUsers200ItemRoleAnyOf;
-
-export type UsersPermissionsGetUsers200Item = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsGetUsers200ItemRole;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
+export type UsersPermissionsGetUsers200 = {
+  data?: PluginUsersPermissionsUserDocument[];
+  meta?: UsersPermissionsGetUsers200Meta;
 };
 
 export type UsersPermissionsPostUsersBody = {
@@ -1390,35 +1656,6 @@ export type UsersPermissionsPostUsersBody = {
   email: string;
   password: string;
   role?: number;
-};
-
-export type UsersPermissionsPostUsers200RoleAnyOfDescription = string | null;
-
-export type UsersPermissionsPostUsers200RoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPostUsers200RoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPostUsers200Role =
-  | number
-  | UsersPermissionsPostUsers200RoleAnyOf;
-
-export type UsersPermissionsPostUsers200 = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPostUsers200Role;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
 };
 
 export type UsersPermissionsGetUsersMeParams = {
@@ -1434,35 +1671,6 @@ export type UsersPermissionsGetUsersMeParams = {
 
 export type UsersPermissionsGetUsersMePopulateAnyOf = {
   [key: string]: unknown;
-};
-
-export type UsersPermissionsGetUsersMe200RoleAnyOfDescription = string | null;
-
-export type UsersPermissionsGetUsersMe200RoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsGetUsersMe200RoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsGetUsersMe200Role =
-  | number
-  | UsersPermissionsGetUsersMe200RoleAnyOf;
-
-export type UsersPermissionsGetUsersMe200 = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsGetUsersMe200Role;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
 };
 
 export type UsersPermissionsGetUsersByIdParams = {
@@ -1484,35 +1692,6 @@ export type UsersPermissionsGetUsersByIdPopulateAnyOf = {
   [key: string]: unknown;
 };
 
-export type UsersPermissionsGetUsersById200RoleAnyOfDescription = string | null;
-
-export type UsersPermissionsGetUsersById200RoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsGetUsersById200RoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsGetUsersById200Role =
-  | number
-  | UsersPermissionsGetUsersById200RoleAnyOf;
-
-export type UsersPermissionsGetUsersById200 = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsGetUsersById200Role;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
 export type UsersPermissionsPutUsersByIdBody = {
   username?: string;
   /** @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$ */
@@ -1521,134 +1700,12 @@ export type UsersPermissionsPutUsersByIdBody = {
   role?: number;
 };
 
-export type UsersPermissionsPutUsersById200RoleAnyOfDescription = string | null;
-
-export type UsersPermissionsPutUsersById200RoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsPutUsersById200RoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsPutUsersById200Role =
-  | number
-  | UsersPermissionsPutUsersById200RoleAnyOf;
-
-export type UsersPermissionsPutUsersById200 = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsPutUsersById200Role;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
-export type UsersPermissionsDeleteUsersById200RoleAnyOfDescription =
-  | string
-  | null;
-
-export type UsersPermissionsDeleteUsersById200RoleAnyOf = {
-  id: number;
-  name: string;
-  description: UsersPermissionsDeleteUsersById200RoleAnyOfDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type UsersPermissionsDeleteUsersById200Role =
-  | number
-  | UsersPermissionsDeleteUsersById200RoleAnyOf;
-
-export type UsersPermissionsDeleteUsersById200 = {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role?: UsersPermissionsDeleteUsersById200Role;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-};
-
-export type UsersPermissionsGetRolesById200RoleDescription = string | null;
-
-export type UsersPermissionsGetRolesById200RolePermissionsControllers = {
-  [key: string]: {
-    [key: string]: {
-      enabled: boolean;
-      policy: string;
-    };
-  };
-};
-
-export type UsersPermissionsGetRolesById200RolePermissions = {
-  [key: string]: {
-    controllers: UsersPermissionsGetRolesById200RolePermissionsControllers;
-  };
-};
-
-export type UsersPermissionsGetRolesById200Role = {
-  id: number;
-  documentId: string;
-  name: string;
-  description: UsersPermissionsGetRolesById200RoleDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  nb_users?: number;
-  permissions?: UsersPermissionsGetRolesById200RolePermissions;
-  users?: unknown[];
-};
-
 export type UsersPermissionsGetRolesById200 = {
-  role: UsersPermissionsGetRolesById200Role;
-};
-
-export type UsersPermissionsGetRoles200RolesItemDescription = string | null;
-
-export type UsersPermissionsGetRoles200RolesItemPermissionsControllers = {
-  [key: string]: {
-    [key: string]: {
-      enabled: boolean;
-      policy: string;
-    };
-  };
-};
-
-export type UsersPermissionsGetRoles200RolesItemPermissions = {
-  [key: string]: {
-    controllers: UsersPermissionsGetRoles200RolesItemPermissionsControllers;
-  };
-};
-
-export type UsersPermissionsGetRoles200RolesItem = {
-  id: number;
-  documentId: string;
-  name: string;
-  description: UsersPermissionsGetRoles200RolesItemDescription;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  nb_users?: number;
-  permissions?: UsersPermissionsGetRoles200RolesItemPermissions;
-  users?: unknown[];
+  role: PluginUsersPermissionsRoleDocument;
 };
 
 export type UsersPermissionsGetRoles200 = {
-  roles: UsersPermissionsGetRoles200RolesItem[];
+  roles: PluginUsersPermissionsRoleDocument[];
 };
 
 export type UsersPermissionsPostRolesBodyPermissions = {

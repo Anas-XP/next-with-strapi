@@ -23,8 +23,8 @@ export const i18nGetLocalesResponseItem = zod.object({
     .string()
     .min(i18nGetLocalesResponseCodeMin)
     .max(i18nGetLocalesResponseCodeMax),
-  createdAt: zod.string(),
-  updatedAt: zod.string(),
+  createdAt: zod.iso.datetime({}),
+  updatedAt: zod.iso.datetime({}),
   publishedAt: zod.union([zod.string(), zod.null()]),
   isDefault: zod.boolean(),
 });

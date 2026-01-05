@@ -29,6 +29,10 @@ export const strapiClient = async <T>(
 ): Promise<AxiosResponse<T>> =>
   asyncHandler(
     async (config: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
+      if (config.headers?.Authorization) {
+        return strapiInstance(config);
+      }
+
       // 1. Check for the user token first∏
       const cookieStore = await cookies();
       const userToken = cookieStore.get(JWT_COOKIE_NAME)?.value;

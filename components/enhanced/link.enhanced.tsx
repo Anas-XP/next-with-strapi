@@ -3,9 +3,8 @@ import { Link } from "@/i18n/navigation";
 import { resolveHref } from "@/lib/href.utils";
 import { cn } from "@/lib/utils";
 import { useLinkStore } from "@/stores/link.store";
-import { useLinkStatus } from "next/link";
-import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
-import { Spinner } from "../ui/spinner";
+import { type ComponentProps, type ReactNode } from "react";
+import { LinkContentLoadable } from "../link-content-loadable";
 
 export const LinkEnhanced = ({
   href,
@@ -35,62 +34,9 @@ export const LinkEnhanced = ({
       })}
       {...props}
     >
-      <LinkContentLoadable href={href} tags={tags} loader={loader}>
+      <LinkContentLoadable<typeof Link> href={href} tags={tags} loader={loader}>
         {children}
       </LinkContentLoadable>
     </Link>
-  );
-};
-
-const LinkContentLoadable = ({
-  href,
-  tags = [],
-  loader = (
-    <>
-      <Spinner /> Loading...
-    </>
-  ),
-  children,
-}: {
-  href: ComponentProps<typeof Link>["href"];
-  tags?: string[];
-  loader?: ReactNode;
-  children?: ReactNode;
-}) => {
-  const { pending } = useLinkStatus();
-  const setLoadingLink = useLinkStore((state) => state.setLoadingLink);
-  const clearLoadingLink = useLinkStore((state) => state.clearLoadingLink);
-  const resolvedHref = resolveHref(href);
-
-  const tagsRef = useRef(tags);
-
-  const isTagsChanged = tagsRef.current.join(",") !== tags.join(",");
-
-  if (isTagsChanged) {
-    tagsRef.current = tags;
-  }
-
-  const stableTags = tagsRef.current;
-
-  useEffect(() => {
-    if (pending) {
-      setLoadingLink({
-        href: resolvedHref,
-        tags: stableTags,
-      });
-    } else {
-      clearLoadingLink({ href: resolvedHref });
-    }
-
-    return () => {
-      clearLoadingLink({ href: resolvedHref });
-    };
-  }, [pending, setLoadingLink, clearLoadingLink, resolvedHref, stableTags]);
-
-  return (
-    <>
-      {pending && loader}
-      {!pending && children}
-    </>
   );
 };
