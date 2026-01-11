@@ -1,11 +1,10 @@
 import axios from "axios";
+import { getAxiosErrorMessage } from "./error-messages.utils";
 import {
   TNormalizedError,
   ZEErrorName,
   ZStrapiErrorResponse,
 } from "./zod-error.schemas";
-import { getAxiosErrorMessage } from "./error-messages.utils";
-import { logger } from "../logger";
 
 export class CaughtError extends Error {
   status: number;

@@ -2,7 +2,6 @@
 
 import { useRouter } from "@/i18n/navigation";
 import { resolveHref } from "@/lib/href.utils";
-import { logger } from "@/lib/logger";
 import { useLinkStore } from "@/stores/link.store";
 import { useLocale } from "next-intl";
 import { useEffect, useRef, useTransition } from "react";
