@@ -1,8 +1,6 @@
 import { loginWithProviderAction } from "@/features/auth/actions/login.actions";
 import { ZEProvider } from "@/features/auth/validations/auth-forms.zod";
-import { getAxiosErrorMessage } from "@/lib/error-handling/error-messages.utils";
-import { logger } from "@/lib/logger";
-import { AxiosError } from "axios";
+import { CaughtError } from "@/lib/error-handling/caught-error.utils";
 import type { AppRouteHandlerFn } from "next/dist/server/route-modules/app-route/module";
 import { NextResponse } from "next/server";
 
@@ -13,33 +11,41 @@ export const GET: AppRouteHandlerFn = async (
   const params = await awaitableParams;
   const providerValidation = ZEProvider.safeParse(params?.["provider"]);
 
-  logger.auth.info(providerValidation);
-
-  if (!providerValidation.success)
-    return NextResponse.redirect(
-      new URL("/login?error=provider_not_valid", request.url),
+  if (!providerValidation.success) {
+    const caughtError = new CaughtError(
+      `${providerValidation.error.message}`,
+      400,
+      null,
+      "ProviderValidationError",
     );
+    caughtError.toSearchParams();
+
+    return NextResponse.redirect(
+      new URL("/login" + caughtError.toSearchParams(), request.url),
+    );
+  }
 
   const searchParams = request.nextUrl.searchParams;
   const token = searchParams.get("access_token");
 
-  logger.auth.info(searchParams.entries());
-
   if (!token)
     return NextResponse.redirect(new URL("/login?error=no_token", request.url));
 
-  const { success, data, error } = await loginWithProviderAction({
+  const { success, error } = await loginWithProviderAction({
     provider: providerValidation.data,
     access_token: token,
   });
 
-  logger.auth.info(success, data, error);
-
-  if (!success)
-    return NextResponse.redirect(
-      new URL(
-        `/login?error=${error.name}&message=${getAxiosErrorMessage(error as AxiosError)}`,
-        request.url,
-      ),
+  if (!success) {
+    const caughtError = new CaughtError(
+      error.message,
+      error.status,
+      null,
+      error.name,
     );
+
+    return NextResponse.redirect(
+      new URL(`/login?${caughtError.toSearchParams()}`, request.url),
+    );
+  }
 };

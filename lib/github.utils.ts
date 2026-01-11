@@ -44,11 +44,9 @@ export async function fetchGitHubUser(
 
     if (!response.ok) {
       if (response.status === 404) {
-        logger.github.warn(`GitHub user not found: ${username}`);
         return null;
       }
       if (response.status === 403) {
-        logger.github.error(`GitHub API rate limit exceeded`);
         return null;
       }
       throw new Error(

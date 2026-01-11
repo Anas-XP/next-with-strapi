@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLinkStore } from "@/stores/link.store";
 import { type ComponentProps, type ReactNode } from "react";
 import { ExternalLinkContentLoadable } from "../external-link-content-loadable";
+import { useLocale } from "next-intl";
 
 export const LinkExternalEnhanced = ({
   href,
@@ -22,8 +23,10 @@ export const LinkExternalEnhanced = ({
   const loadingHref = useLinkStore((state) => state.loadingHref);
   const loadingTags = useLinkStore((state) => state.loadingTags);
 
+  const locale = useLocale();
+
   const safeHref = href ?? "";
-  const resolvedHref = resolveHref(safeHref);
+  const resolvedHref = resolveHref(safeHref, locale);
 
   const isGlobalLoading =
     loadingHref === resolvedHref ||

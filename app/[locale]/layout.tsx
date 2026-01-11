@@ -8,6 +8,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { QueryProvider } from "@/providers/tanstack-query/query-provider";
+import { SearchParamsErrorListener } from "@/components/search-params-error-listener";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,6 +57,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <QueryProvider>{children}</QueryProvider>
+            <SearchParamsErrorListener />
             <Toaster theme="light" richColors />
           </ThemeProvider>
         </NextIntlClientProvider>

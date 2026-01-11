@@ -6,6 +6,7 @@ import Link, { useLinkStatus } from "next/link";
 import { useLinkStore } from "@/stores/link.store";
 import { resolveHref } from "@/lib/href.utils";
 import { Link as I18nLink } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 
 export const LinkContentLoadable = <T extends typeof I18nLink | typeof Link>({
   href,
@@ -22,10 +23,13 @@ export const LinkContentLoadable = <T extends typeof I18nLink | typeof Link>({
   loader?: ReactNode;
   children?: ReactNode;
 }) => {
-  const { pending } = useLinkStatus();
   const setLoadingLink = useLinkStore((state) => state.setLoadingLink);
   const clearLoadingLink = useLinkStore((state) => state.clearLoadingLink);
-  const resolvedHref = resolveHref(href);
+
+  const { pending } = useLinkStatus();
+  const locale = useLocale();
+
+  const resolvedHref = resolveHref(href, locale);
 
   const tagsRef = useRef(tags);
 

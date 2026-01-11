@@ -8,6 +8,7 @@ const loggerInitiator = () => {
     api: createLogger("API"),
     github: createLogger("GITHUB"),
     asyncHandLer: createLogger("ASYNC HANDLER"),
+    searchParamsErrorListener: createLogger("SEARCH PARAMS ERROR LISTENER"),
     general: createLogger("GENERAL"),
   };
 };

@@ -12,6 +12,6 @@ export const zodRegisterFormSchema = usersPermissionsPostAuthLocalRegisterBody;
 
 export type TZodRegisterFormSchema = z.infer<typeof zodRegisterFormSchema>;
 
-export const ZEProvider = z.enum(["github", "google"]);
+export const ZEProvider = z.enum(["github", "google", "microsoft"]);
 
 export type TEProvider = z.infer<typeof ZEProvider>;

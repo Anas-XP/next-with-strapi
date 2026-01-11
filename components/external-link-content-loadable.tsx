@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { Spinner } from "./ui/spinner"; // تأكد من المسار
 import { useLinkStore } from "@/stores/link.store";
 import { resolveHref } from "@/lib/href.utils";
+import { useLocale } from "next-intl";
 
 export const ExternalLinkContentLoadable = ({
   href,
@@ -21,10 +22,11 @@ export const ExternalLinkContentLoadable = ({
   isLoading: boolean;
 }) => {
   const clearLoadingLink = useLinkStore((state) => state.clearLoadingLink);
-  const resolvedHref = resolveHref(href);
 
-  // ✅ حل مشكلة زر الرجوع (Back Button)
-  // إذا عاد المستخدم من الصفحة الخارجية، يجب إطفاء اللودر
+  const locale = useLocale();
+
+  const resolvedHref = resolveHref(href, locale);
+
   useEffect(() => {
     const handlePageShow = () => {
       clearLoadingLink({ href: resolvedHref });

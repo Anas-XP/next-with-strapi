@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLinkStore } from "@/stores/link.store";
 import { type ComponentProps, type ReactNode } from "react";
 import { LinkContentLoadable } from "../link-content-loadable";
+import { useLocale } from "next-intl";
 
 export const LinkEnhanced = ({
   href,
@@ -20,7 +21,9 @@ export const LinkEnhanced = ({
   const loadingHref = useLinkStore((state) => state.loadingHref);
   const loadingTags = useLinkStore((state) => state.loadingTags);
 
-  const resolvedHref = resolveHref(href);
+  const locale = useLocale();
+
+  const resolvedHref = resolveHref(href, locale);
 
   const isGlobalLoading =
     loadingHref === resolvedHref ||

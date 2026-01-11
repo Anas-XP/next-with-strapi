@@ -2,11 +2,14 @@
 
 import { useRouter } from "@/i18n/navigation";
 import { resolveHref } from "@/lib/href.utils";
+import { logger } from "@/lib/logger";
 import { useLinkStore } from "@/stores/link.store";
+import { useLocale } from "next-intl";
 import { useEffect, useRef, useTransition } from "react";
 
 export const useRouterEnhanced = () => {
   const router = useRouter();
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const setLoadingLink = useLinkStore((state) => state.setLoadingLink);
   const clearLoadingLink = useLinkStore((state) => state.clearLoadingLink);
@@ -18,13 +21,13 @@ export const useRouterEnhanced = () => {
     options?: Parameters<typeof router.push>[1] & { tags?: string[] },
   ) => {
     const { tags = [], ...routerOptions } = options || {};
-    const resolvedHref = resolveHref(href);
+    const resolvedHref = resolveHref(href, locale);
 
     targetHrefRef.current = resolvedHref;
     setLoadingLink({ href: resolvedHref, tags });
 
     startTransition(() => {
-      router.push(href, routerOptions);
+      router.push(resolvedHref, routerOptions);
     });
   };
 
@@ -33,13 +36,13 @@ export const useRouterEnhanced = () => {
     options?: Parameters<typeof router.replace>[1] & { tags?: string[] },
   ) => {
     const { tags = [], ...routerOptions } = options || {};
-    const resolvedHref = resolveHref(href);
+    const resolvedHref = resolveHref(href, locale);
 
     targetHrefRef.current = resolvedHref;
     setLoadingLink({ href: resolvedHref, tags });
 
     startTransition(() => {
-      router.replace(href, routerOptions);
+      router.replace(resolvedHref, routerOptions);
     });
   };
 

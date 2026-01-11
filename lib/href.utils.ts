@@ -1,9 +1,11 @@
 import { type UrlObject } from "url";
 
-export function resolveHref(href: string | UrlObject): string {
-  if (typeof href === "string") return href;
+export function resolveHref(href: string | UrlObject, locale: string): string {
+  if (typeof href === "string") return href.replace(`/${locale}`, "");
 
-  const { pathname = "", query, hash } = href;
+  const { pathname: dirtyPathname = "", query, hash } = href;
+
+  const pathname = dirtyPathname?.replace(`/${locale}`, "");
 
   const queryString = formatQueryString(query);
 

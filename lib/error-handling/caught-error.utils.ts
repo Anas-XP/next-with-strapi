@@ -5,6 +5,7 @@ import {
   ZStrapiErrorResponse,
 } from "./zod-error.schemas";
 import { getAxiosErrorMessage } from "./error-messages.utils";
+import { logger } from "../logger";
 
 export class CaughtError extends Error {
   status: number;
@@ -15,12 +16,20 @@ export class CaughtError extends Error {
     message: string,
     status: number = 500,
     details: TNormalizedError["details"] = null,
-    name: TNormalizedError["name"] = "UnexpectedError",
+    name: string = "UnexpectedError",
   ) {
     super(message);
     this.status = status;
     this.details = details;
-    this.name = name;
+
+    const errorNameValidation = ZEErrorName.safeParse(name);
+
+    if (!errorNameValidation.success) {
+      this.name = "UnknownError";
+    } else {
+      this.name = errorNameValidation.data;
+    }
+
     Object.setPrototypeOf(this, CaughtError.prototype);
   }
 
@@ -70,5 +79,15 @@ export class CaughtError extends Error {
       status: this.status,
       details: this.details,
     };
+  }
+
+  toSearchParams() {
+    const params = new URLSearchParams();
+
+    params.set("error[name]", this.name);
+    params.set("error[message]", this.message);
+    params.set("error[status]", this.status.toString());
+
+    return params.toString();
   }
 }
